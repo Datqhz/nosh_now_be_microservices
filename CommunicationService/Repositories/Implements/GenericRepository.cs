@@ -1,6 +1,8 @@
-﻿namespace CommunicationService.Repositories.Implements;
+﻿using CommunicationService.Repositories.Interfaces;
 
-public class GenericRepository
+namespace CommunicationService.Repositories.Implements;
+
+public class GenericRepository :  IGenericRepository
 {
     
 }

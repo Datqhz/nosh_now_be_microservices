@@ -1,6 +1,11 @@
-﻿namespace AuthServer.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public class AuthenticationController
+namespace AuthServer.Controllers;
+
+
+[ApiController]
+[Route("[controller]")]
+public class AuthenticationController : ControllerBase
 {
     
 }

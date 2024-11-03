@@ -1,6 +1,6 @@
 ﻿namespace CommunicationService.Repositories;
 
-public class UnitOfRepository
+public class UnitOfRepository : IUnitOfRepository
 {
     
 }

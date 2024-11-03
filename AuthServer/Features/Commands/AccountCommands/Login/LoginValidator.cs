@@ -1,4 +1,6 @@
-﻿namespace AuthServer.Features.Commands.AccountCommands.Login;
+﻿using FluentValidation;
+
+namespace AuthServer.Features.Commands.AccountCommands.Login;
 
 public class LoginValidator
 {

@@ -1,6 +1,6 @@
 ﻿namespace OrderService.Repositories.Interfaces;
 
-public class IGenericRepository
+public interface IGenericRepository
 {
     
 }

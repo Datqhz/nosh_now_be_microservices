@@ -1,6 +1,8 @@
-﻿namespace CoreService.Repositories.Implements;
+﻿using CoreService.Repositories.Interfaces;
 
-public class GenericRepository
+namespace CoreService.Repositories.Implements;
+
+public class GenericRepository : IGenericRepository
 {
     
 }

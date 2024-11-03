@@ -1,6 +1,6 @@
 ﻿namespace AuthServer.Repositories;
 
-public class IUnitOfRepository
+public interface IUnitOfRepository
 {
     
 }

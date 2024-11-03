@@ -1,6 +1,6 @@
 ﻿namespace AuthServer.Data.Models.Configurations;
 
-public class AccountConfigurations
+public class AccountConfiguration
 {
     
 }

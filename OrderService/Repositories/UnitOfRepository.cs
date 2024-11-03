@@ -1,6 +1,6 @@
 ﻿namespace OrderService.Repositories;
 
-public class UnitOfRepository
+public class UnitOfRepository : IUnitOfRepository
 {
     
 }

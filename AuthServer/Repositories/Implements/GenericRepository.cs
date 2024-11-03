@@ -1,6 +1,8 @@
-﻿namespace AuthServer.Repositories.Implements;
+﻿using AuthServer.Repositories.Interfaces;
 
-public class GenericRepository
+namespace AuthServer.Repositories.Implements;
+
+public class GenericRepository : IGenericRepository
 {
     
 }

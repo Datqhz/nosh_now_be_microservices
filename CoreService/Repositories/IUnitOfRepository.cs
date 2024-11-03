@@ -1,6 +1,6 @@
-﻿namespace CoreService.Repositories.Interfaces;
+﻿namespace CoreService.Repositories;
 
-public class IUnitOfRepository
+public interface IUnitOfRepository
 {
     
 }

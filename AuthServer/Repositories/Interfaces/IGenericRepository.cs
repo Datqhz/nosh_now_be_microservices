@@ -1,6 +1,6 @@
 ﻿namespace AuthServer.Repositories.Interfaces;
 
-public class IGenericRepository
+public interface IGenericRepository
 {
     
 }
