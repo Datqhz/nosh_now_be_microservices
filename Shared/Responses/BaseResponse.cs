@@ -7,3 +7,13 @@ public class BaseResponse
     public string ErrorMessage { get; set; }
     public string MessageCode { get; set; }
 }
+
+public enum ResponseStatusCode
+{
+    Ok = 200,
+    Created = 201,
+    InternalServerError = 500,
+    Forbidden = 403,
+    BadRequest = 400,
+    NotFound = 404,
+}
