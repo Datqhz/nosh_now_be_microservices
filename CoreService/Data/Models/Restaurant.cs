@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CoreService.Data.Models.Interfaces;
 using Shared.Enums;
 
 namespace CoreService.Data.Models;
 
-public class Restaurant
+public class Restaurant : IUser
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

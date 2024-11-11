@@ -143,26 +143,7 @@ public static class ServiceExtensions
     
     public static IServiceCollection AddCustomMassTransitRegistration(this IServiceCollection services)
     {
-        services.AddMassTransitRegistration( registrationConfigure:(ctx, cfg) =>
-        {
-            cfg.Message<CreateUser>(x =>
-            {
-                x.SetEntityName(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateUser)));
-            });
-            cfg.Publish<CreateUser>(cfgPublishTopology =>
-            {
-                cfgPublishTopology.ExchangeType = ExchangeType.Topic;
-            });
-            
-            cfg.Message<UpdateUser>(x =>
-            {
-                x.SetEntityName(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateUser)));
-            });
-            cfg.Publish<UpdateUser>(cfgPublishTopology =>
-            {
-                cfgPublishTopology.ExchangeType = ExchangeType.Topic;
-            });
-        });
+        services.AddMassTransitRegistration();
         return services;
     }
 }

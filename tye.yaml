@@ -1,0 +1,31 @@
+﻿name: Nosh Now BE Application
+services:
+  - name: authserver
+    project: ./AuthServer/AuthServer.csproj
+    tags:
+      - authserver
+    bindings:
+      - protocol: http
+        port: 5237
+
+  - name: coreservice
+    project: ./CoreService/CoreService.csproj
+    tags:
+      - coreservice
+    bindings:
+      - protocol: http
+        port: 5281
+  - name: orderservice
+    project: ./OrderService/OrderService.csproj
+    tags:
+      - orderservice
+    bindings:
+      - protocol: http
+        port: 5047
+  - name: communicationservice
+    project: ./CommunicationService/CommunicationService.csproj
+    tags:
+      - communicationservice
+    bindings:
+      - protocol: http
+        port: 5044

@@ -120,25 +120,15 @@ public static class ServiceExtensions
     {
         services.AddMassTransitRegistration(registrationConfigure: (ctx, cfg) =>
         {
-            cfg.ReceiveEndpoint($"core-service-{new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateUser))}", e =>
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateUser)), e =>
             {
                 e.ConfigureConsumeTopology = false;
-                var exchangeName = new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateUser));
-                e.Bind(exchangeName, x =>
-                {
-                    x.ExchangeType = ExchangeType.Topic;
-                });
-                e.ConfigureConsumer<CreateUserConsumer>(ctx);
+                e.ConfigureConsumer <CreateUserConsumer>(ctx);
             });
-            cfg.ReceiveEndpoint($"core-service-{new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateUser))}", e =>
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateUser)), e =>
             {
                 e.ConfigureConsumeTopology = false;
-                var exchangeName = new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateUser));
-                e.Bind(exchangeName, x =>
-                {
-                    x.ExchangeType = ExchangeType.Topic;
-                });
-                e.ConfigureConsumer<UpdateUserConsumer>(ctx);
+                e.ConfigureConsumer <UpdateUserConsumer>(ctx);
             });
         });
         return services;

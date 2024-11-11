@@ -92,22 +92,21 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, RegisterResponse
     #region Private methods
 
     private SystemRole GetSystemRole(string role)
-    {
-        switch (role)
-        {
-            case AuthServer.Constants.Constants.Role.Admin:
-                return SystemRole.Admin;
-            case AuthServer.Constants.Constants.Role.Customer:
-                return SystemRole.Customer;
-            case AuthServer.Constants.Constants.Role.ServiceStaff:
-                return SystemRole.ServiceStaff;
-            case AuthServer.Constants.Constants.Role.Restaurant:
-                return SystemRole.Restaurant;
-            case AuthServer.Constants.Constants.Role.Chef:
-                return SystemRole.Chef;
-            default:
-                return SystemRole.Shipper;
-        }
+    {switch (role)
+             {
+                 case AuthServer.Constants.Constants.Role.Admin:
+                     return SystemRole.Admin;
+                 case AuthServer.Constants.Constants.Role.Customer:
+                     return SystemRole.Customer;
+                 case AuthServer.Constants.Constants.Role.ServiceStaff:
+                     return SystemRole.ServiceStaff;
+                 case AuthServer.Constants.Constants.Role.Restaurant:
+                     return SystemRole.Restaurant;
+                 case AuthServer.Constants.Constants.Role.Chef:
+                     return SystemRole.Chef;
+                 default:
+                     return SystemRole.Shipper;
+             }
     }
 
     #endregion

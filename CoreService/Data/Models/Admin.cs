@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CoreService.Data.Models.Interfaces;
 
 namespace CoreService.Data.Models;
 
-public class Admin
+public class Admin : IUser
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

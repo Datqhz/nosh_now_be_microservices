@@ -51,7 +51,7 @@ public class AfterRegisterPostProcessor : IRequestPostProcessor<RegisterCommand,
                     DisplayName = response.Data.DisplayName,
                 };
                 //send
-                await _sendEndpoint.SendMessage<CreateUser>(createUserEvent, ExchangeType.Topic, cancellationToken);
+                await _sendEndpoint.SendMessage<CreateUser>(createUserEvent, ExchangeType.Direct, cancellationToken);
                 await _sendEndpoint.SendMessage<SendVerificationEmail>(sendVerificationEmailEvent, ExchangeType.Direct, cancellationToken);
             }
         }

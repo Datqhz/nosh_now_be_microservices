@@ -11,6 +11,7 @@ using OrderService.Repositories;
 using RabbitMQ.Client;
 using Shared.Helpers;
 using Shared.MassTransits;
+using Shared.MassTransits.Contracts;
 using Shared.Validations;
 
 namespace OrderService.Extensions;
@@ -116,29 +117,29 @@ public static class ServiceExtensions
     }
     public static IServiceCollection AddCustomMassTransitRegistration(this IServiceCollection services)
     {
-        // services.AddMassTransitRegistration(registrationConfigure: (ctx, cfg) =>
-        // {
-        //     cfg.ReceiveEndpoint($"{new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateUser))}", e =>
-        //     {
-        //         e.ConfigureConsumeTopology = false;
-        //         var exchangeName = new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateUser));
-        //         e.Bind(exchangeName, x =>
-        //         {
-        //             x.ExchangeType = ExchangeType.Topic;
-        //         });
-        //         e.ConfigureConsumer<CreateUserConsumer>(ctx);
-        //     });
-        //     cfg.ReceiveEndpoint($"core-service-{new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateUser))}", e =>
-        //     {
-        //         e.ConfigureConsumeTopology = false;
-        //         var exchangeName = new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateUser));
-        //         e.Bind(exchangeName, x =>
-        //         {
-        //             x.ExchangeType = ExchangeType.Topic;
-        //         });
-        //         e.ConfigureConsumer<UpdateUserConsumer>(ctx);
-        //     });
-        // });
+        services.AddMassTransitRegistration(registrationConfigure: (ctx, cfg) =>
+        {
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateSnapshotUser)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer <CreateUserConsumer>(ctx);
+            });
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateSnapshotUser)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer <UpdateUserConsumer>(ctx);
+            });
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateFood)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer <CreateFoodConsumer>(ctx);
+            });
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateFood)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer <UpdateFoodConsumer>(ctx);
+            });
+        });
         return services;
     }
 }
