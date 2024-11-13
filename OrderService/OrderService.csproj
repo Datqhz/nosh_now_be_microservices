@@ -29,8 +29,6 @@
 
     <ItemGroup>
       <Folder Include="Data\Contexts\Migrations\" />
-      <Folder Include="Features\Commands\OrderCommands\" />
-      <Folder Include="Features\Queries\OrderQueries\" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using CommunicationService.Consumers;
+using CommunicationService.Hubs;
 using CommunicationService.Repositories;
 using CommunicationService.Services;
 using FluentValidation;
@@ -26,7 +27,7 @@ public static class ServiceExtensions
             .AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
-                options.Authority = "http://localhost:5092";
+                options.Authority = "http://localhost:5237";
                 options.RequireHttpsMetadata = false;
                 options.Audience = "Mobile";
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -130,5 +131,25 @@ public static class ServiceExtensions
             });
         });
         return services;
+    }
+    
+    public static IServiceCollection AddSignalRServer(this IServiceCollection services)
+    {
+        services.AddSignalR(options =>
+            {
+                options.KeepAliveInterval = TimeSpan.FromSeconds(30); 
+                options.EnableDetailedErrors = true;
+            })
+            .AddMessagePackProtocol()
+            ;
+        return services;
+    }
+    public static void AddSignalREndpoints(this IApplicationBuilder app)
+    {
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<NotificationHub>("/order-status");
+        });
     }
 }

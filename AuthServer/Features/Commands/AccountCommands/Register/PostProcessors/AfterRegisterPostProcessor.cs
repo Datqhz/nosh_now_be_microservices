@@ -59,6 +59,5 @@ public class AfterRegisterPostProcessor : IRequestPostProcessor<RegisterCommand,
         {
             _logger.LogError(ex, $"{functionName} Has error: {ex.Message}");
         }
-        
     }
 }

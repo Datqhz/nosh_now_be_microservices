@@ -10,7 +10,8 @@ builder.Services
     .AddCustomCors()
     .AddCustomHttpContextAccessor()
     .ConfigureSwagger()
-    .AddCustomMassTransitRegistration();
+    //.AddCustomMassTransitRegistration()
+    .AddSignalRServer();
 builder.Services.AddControllers();
 var app = builder.Build();
 
@@ -19,8 +20,9 @@ if (!app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowAnyOrigin");
+app.UseRouting();
+app.UseCors("AllowAllOrigins");
 //app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseAuthorization();
-app.MapControllers();
+//app.UseAuthorization();
+app.AddSignalREndpoints();
 app.Run();

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OrderService.Enums;
+using Shared.Enums;
 
 namespace OrderService.Data.Models.Configurations;
 
