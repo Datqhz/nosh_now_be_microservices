@@ -30,28 +30,28 @@ public class GetRestaurantByCategoryHandler : IRequestHandler<GetRestaurantByCat
         try
         {
             _logger.LogInformation(functionName);
-            var restaurants = await
-                (
-                    from res in _unitOfRepository.Restaurant.GetAll()
-                    join food in _unitOfRepository.Food.GetAll()
-                        on res.Id equals food.RestaurantId
-                    join category in _unitOfRepository.Category.GetAll()
-                        on food.CategoryId equals category.Id
-                    let distance = LocationHelper.GetDistance(payload.Coordinate, res.Coordinate)
-                    where category.Id.ToString().Equals(payload.CategoryId)
-                    select new GetRestaurantByCategoryData
-                    {
-                        RestaurantId = res.Id.ToString(),
-                        Avatar = res.Avatar,
-                        Distance = distance,
-                        RestaurantName = res.DisplayName
-                    }
-                )
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
-                // .ToListAsPageAsync(payload.PageNumber, payload.MaxPerPage, cancellationToken);
-
-            response.Data = restaurants;
+            // var restaurants = await
+            //     (
+            //         from res in _unitOfRepository.Restaurant.GetAll()
+            //         join food in _unitOfRepository.Food.GetAll()
+            //             on res.Id equals food.RestaurantId
+            //         join category in _unitOfRepository.Category.GetAll()
+            //             on food.CategoryId equals category.Id
+            //         let distance = LocationHelper.GetDistance(payload.Coordinate, res.Coordinate)
+            //         where category.Id.ToString().Equals(payload.CategoryId)
+            //         select new GetRestaurantByCategoryData
+            //         {
+            //             RestaurantId = res.Id.ToString(),
+            //             Avatar = res.Avatar,
+            //             Distance = distance,
+            //             RestaurantName = res.DisplayName
+            //         }
+            //     )
+            //     .AsNoTracking()
+            //     .ToListAsync(cancellationToken);
+            //     // .ToListAsPageAsync(payload.PageNumber, payload.MaxPerPage, cancellationToken);
+            //
+            // response.Data = restaurants;
             response.StatusCode = (int)ResponseStatusCode.Ok;
         }
         catch (Exception ex)

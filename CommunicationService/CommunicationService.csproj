@@ -30,15 +30,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\DbContexts\Migrations\" />
-      <Folder Include="Data\Models\Configurations\" />
-      <Folder Include="Enums\" />
+      <Folder Include="Data\Context\Migrations\" />
       <Folder Include="Features\Queries\" />
       <Folder Include="Models\Responses\" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AuthServer\AuthServer.csproj" />
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
 

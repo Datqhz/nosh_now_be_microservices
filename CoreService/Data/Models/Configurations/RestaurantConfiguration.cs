@@ -27,7 +27,5 @@ public class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
             .HasDefaultValue(false);
         builder.Property(x => x.Avatar)
             .IsRequired();
-        builder.Property(x => x.AccountId)
-            .IsRequired();
     }
 }

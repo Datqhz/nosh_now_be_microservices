@@ -13,5 +13,4 @@ public class Admin : IUser
     public string Email { get; set; }
     public bool IsActive { get; set; }
     public string Avatar { get; set; }
-    public string AccountId { get; set; }
 }

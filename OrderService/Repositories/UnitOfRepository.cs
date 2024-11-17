@@ -10,6 +10,9 @@ public class UnitOfRepository : IUnitOfRepository
     private readonly OrderDbContext _context;
     private IDbContextTransaction _transaction;
     public IEmployeeRepository Employee { get; }
+    public ICategoryRepository Category { get; }
+    public IRequiredIngredientRepository RequiredIngredient { get; }
+    public IIngredientRepository Ingredient { get; }
     public IFoodRepository Food { get; }
     public IRestaurantRepository Restaurant { get; }
     public IShipperRepository Shipper { get; }
@@ -28,6 +31,10 @@ public class UnitOfRepository : IUnitOfRepository
         OrderDetail = new OrderDetailRepository(context);
         Order = new OrderRepository(context);
         PaymentMethod = new PaymentMethodRepository(context);
+        Category = new CategoryRepository(context);
+        Food = new FoodRepository(context);
+        Ingredient = new IngredientRepository(context);
+        RequiredIngredient = new RequiredIngredientRepository(context);
     }
     
     

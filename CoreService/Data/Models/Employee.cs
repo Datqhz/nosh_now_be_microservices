@@ -17,6 +17,5 @@ public class Employee : IUser
     public string Avatar { get; set; }
     public RestaurantRole Role { get; set; }
     public Guid RestaurantId { get; set; }
-    public string AccountId { get; set; }
     public virtual Restaurant Restaurant { get; set; }
 }

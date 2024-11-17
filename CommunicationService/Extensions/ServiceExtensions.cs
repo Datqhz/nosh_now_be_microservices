@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using CommunicationService.Consumers;
+using CommunicationService.Data.Contexts;
 using CommunicationService.Hubs;
 using CommunicationService.Repositories;
 using CommunicationService.Services;
@@ -71,16 +72,16 @@ public static class ServiceExtensions
         return services;
     }
 
-    // public static IServiceCollection ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
-    // {
-    //     var connectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
-    //     services.AddDbContext<CoreDbContext>(options =>
-    //     {
-    //         options.UseNpgsql(connectionString);
-    //         options.EnableSensitiveDataLogging();
-    //     });
-    //     return services;
-    // }
+    public static IServiceCollection ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetValue<string>("DatabaseSettings:ConnectionString");
+        services.AddDbContext<CommunicationDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString);
+            options.EnableSensitiveDataLogging();
+        });
+        return services;
+    }
 
     public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
     {
@@ -93,7 +94,7 @@ public static class ServiceExtensions
     {
         services.AddSwaggerGen(opt =>
         {
-            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthApi", Version = "v1" });
+            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "CommunicationApi", Version = "v1" });
             opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -137,7 +138,7 @@ public static class ServiceExtensions
     {
         services.AddSignalR(options =>
             {
-                options.KeepAliveInterval = TimeSpan.FromSeconds(30); 
+                options.KeepAliveInterval = TimeSpan.FromDays(365); 
                 options.EnableDetailedErrors = true;
             })
             .AddMessagePackProtocol()

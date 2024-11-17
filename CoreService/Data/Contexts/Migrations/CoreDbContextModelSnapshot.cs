@@ -29,10 +29,6 @@ namespace CoreService.Data.Contexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnType("text");
@@ -84,34 +80,11 @@ namespace CoreService.Data.Contexts.Migrations
                     b.ToTable("Calendar", "core");
                 });
 
-            modelBuilder.Entity("CoreService.Data.Models.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Category", "core");
-                });
-
             modelBuilder.Entity("CoreService.Data.Models.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Avatar")
                         .IsRequired()
@@ -150,10 +123,6 @@ namespace CoreService.Data.Contexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnType("text");
@@ -188,80 +157,6 @@ namespace CoreService.Data.Contexts.Migrations
                     b.ToTable("Employee", "core");
                 });
 
-            modelBuilder.Entity("CoreService.Data.Models.Food", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<Guid>("RestaurantId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("Food", "core");
-                });
-
-            modelBuilder.Entity("CoreService.Data.Models.Ingredient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar");
-
-                    b.Property<double>("Quantity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("double precision")
-                        .HasDefaultValue(0.0);
-
-                    b.Property<Guid>("RestaurantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Unit")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("Ingredient", "core");
-                });
-
             modelBuilder.Entity("CoreService.Data.Models.Location", b =>
                 {
                     b.Property<int>("Id")
@@ -293,41 +188,11 @@ namespace CoreService.Data.Contexts.Migrations
                     b.ToTable("Location", "core");
                 });
 
-            modelBuilder.Entity("CoreService.Data.Models.RequiredIngredient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FoodId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("IngredientId")
-                        .HasColumnType("integer");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FoodId");
-
-                    b.HasIndex("IngredientId");
-
-                    b.ToTable("RequiredIngredient", "core");
-                });
-
             modelBuilder.Entity("CoreService.Data.Models.Restaurant", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Avatar")
                         .IsRequired()
@@ -411,36 +276,6 @@ namespace CoreService.Data.Contexts.Migrations
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("CoreService.Data.Models.Food", b =>
-                {
-                    b.HasOne("CoreService.Data.Models.Category", "Category")
-                        .WithMany("Foods")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoreService.Data.Models.Restaurant", "Restaurant")
-                        .WithMany("Foods")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("CoreService.Data.Models.Ingredient", b =>
-                {
-                    b.HasOne("CoreService.Data.Models.Restaurant", "Restaurant")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Restaurant");
-                });
-
             modelBuilder.Entity("CoreService.Data.Models.Location", b =>
                 {
                     b.HasOne("CoreService.Data.Models.Customer", "Customer")
@@ -452,43 +287,9 @@ namespace CoreService.Data.Contexts.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("CoreService.Data.Models.RequiredIngredient", b =>
-                {
-                    b.HasOne("CoreService.Data.Models.Food", "Food")
-                        .WithMany("RequiredIngredients")
-                        .HasForeignKey("FoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoreService.Data.Models.Ingredient", "Ingredient")
-                        .WithMany("RequiredIngredients")
-                        .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Food");
-
-                    b.Navigation("Ingredient");
-                });
-
-            modelBuilder.Entity("CoreService.Data.Models.Category", b =>
-                {
-                    b.Navigation("Foods");
-                });
-
             modelBuilder.Entity("CoreService.Data.Models.Customer", b =>
                 {
                     b.Navigation("Locations");
-                });
-
-            modelBuilder.Entity("CoreService.Data.Models.Food", b =>
-                {
-                    b.Navigation("RequiredIngredients");
-                });
-
-            modelBuilder.Entity("CoreService.Data.Models.Ingredient", b =>
-                {
-                    b.Navigation("RequiredIngredients");
                 });
 
             modelBuilder.Entity("CoreService.Data.Models.Restaurant", b =>
@@ -496,10 +297,6 @@ namespace CoreService.Data.Contexts.Migrations
                     b.Navigation("Calendars");
 
                     b.Navigation("Employees");
-
-                    b.Navigation("Foods");
-
-                    b.Navigation("Ingredients");
                 });
 #pragma warning restore 612, 618
         }

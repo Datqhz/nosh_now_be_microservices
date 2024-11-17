@@ -10,6 +10,7 @@ public interface IGenericRepository<T>
     Task<bool> AddRange(IEnumerable<T> entities);
     bool Update(T entity);
     bool Delete(T entity);
+    bool DeleteRange(IEnumerable<T> entities);
     IQueryable<T> Where(Expression<Func<T, bool>> expression);
     
 }

@@ -75,7 +75,8 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, RegisterResponse
                 Avatar = payload.Avatar,
                 Account = newAccount,
                 DisplayName = payload.Displayname,
-                Role = GetSystemRole(role)
+                Role = GetSystemRole(role),
+                Coordinate = payload.Coordinate
             };
         }
         catch (Exception ex)

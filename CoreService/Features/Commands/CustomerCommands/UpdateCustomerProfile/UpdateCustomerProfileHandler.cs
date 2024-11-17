@@ -37,7 +37,7 @@ public class UpdateCustomerProfileHandler : IRequestHandler<UpdateCustomerProfil
             var customer = await
                 (
                     from cus in _unitOfRepository.Customer.GetAll()
-                    where cus.AccountId == currentUserId
+                    where cus.Id.ToString().Equals(currentUserId)
                           && cus.IsActive
                     select cus
                 )

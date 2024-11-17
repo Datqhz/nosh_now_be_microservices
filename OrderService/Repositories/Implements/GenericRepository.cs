@@ -72,6 +72,20 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
             return false;
         }
     }
+
+    public bool DeleteRange(IEnumerable<T> entities)
+    {
+        try
+        {
+            _dbSet.RemoveRange(entities);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return false;
+        }
+    }
     public virtual IQueryable<T> Where(Expression<Func<T, bool>> expression)
     {
         return _dbSet.Where(expression);

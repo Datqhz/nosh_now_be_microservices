@@ -27,8 +27,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .IsRequired();
         builder.Property(x => x.Role)
             .IsRequired();
-        builder.Property(x => x.AccountId)
-            .IsRequired();
         builder.Property(x => x.RestaurantId)
             .IsRequired();
         builder.HasOne(x => x.Restaurant)

@@ -29,7 +29,5 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasDefaultValue(false);
         builder.Property(x => x.Avatar)
             .IsRequired();
-        builder.Property(x => x.AccountId)
-            .IsRequired();
     }
 }

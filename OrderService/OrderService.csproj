@@ -29,6 +29,8 @@
 
     <ItemGroup>
       <Folder Include="Data\Contexts\Migrations\" />
+      <Folder Include="Features\Commands\CategoryCommands\DeleteCategory\" />
+      <Folder Include="Features\Commands\OrderCommands\CancelOrder\PostProcessor\" />
     </ItemGroup>
 
     <ItemGroup>

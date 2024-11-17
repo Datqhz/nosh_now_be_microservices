@@ -4,13 +4,14 @@ using Shared.HttpContextAccessor;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .ConfigureDbContext(builder.Configuration)
     .ConfigureDependencyInjection()
     .AddValidators()
     .ConfigureMediator()
     .AddCustomCors()
     .AddCustomHttpContextAccessor()
     .ConfigureSwagger()
-    //.AddCustomMassTransitRegistration()
+    .AddCustomMassTransitRegistration()
     .AddSignalRServer();
 builder.Services.AddControllers();
 var app = builder.Build();

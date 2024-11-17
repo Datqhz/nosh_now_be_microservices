@@ -15,6 +15,5 @@ public class Customer : IUser
     public bool IsActive { get; set; }
     public string Avatar { get; set; }
     public int BoomCount { get; set; }
-    public string AccountId { get; set; }
     public virtual IEnumerable<Location> Locations { get; set; }
 }

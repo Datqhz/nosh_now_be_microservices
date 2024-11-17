@@ -11,12 +11,10 @@ public class UnitOfRepository : IUnitOfRepository
     private IDbContextTransaction _transaction;
     public IAdminRepository Admin { get; }
     public ICalendarRepository Calendar { get; }
-    public ICategoryRepository Category { get; }
     public IEmployeeRepository Employee { get; }
-    public IFoodRepository Food { get; }
-    public IIngredientRepository Ingredient { get; }
+    
     public ILocationRepository Location { get; }
-    public IRequiredIngredientRepository RequiredIngredient { get; }
+
     public IRestaurantRepository Restaurant { get; }
     public IShipperRepository Shipper { get; }
     public ICustomerRepository Customer{ get; }
@@ -26,12 +24,8 @@ public class UnitOfRepository : IUnitOfRepository
         Customer = new CustomerRepository(context);
         Admin = new AdminRepository(context);
         Calendar = new CalendarRepository(context);
-        Category = new CategoryRepository(context);
         Employee = new EmployeeRepository(context);
-        Food = new FoodRepository(context);
-        Ingredient = new IngredientRepository(context);
         Location = new LocationRepository(context);
-        RequiredIngredient = new RequiredIngredientRepository(context);
         Restaurant = new RestaurantRepository(context);
         Shipper = new ShipperRepository(context);
     }

@@ -22,7 +22,5 @@ public class AdminConfiguration : IEntityTypeConfiguration<Admin>
             .HasDefaultValue(true);
         builder.Property(x => x.Avatar)
             .IsRequired();
-        builder.Property(x => x.AccountId)
-            .IsRequired();
     }
 }

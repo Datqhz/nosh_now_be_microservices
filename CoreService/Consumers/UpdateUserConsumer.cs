@@ -31,20 +31,10 @@ public class UpdateUserConsumer : IConsumer<UpdateUser>
             _logger.LogInformation(functionName);
             switch (message.SystemRole)
             {
-                case SystemRole.Admin:
-                {
-                    var admin = await _unitOfRepository.Admin
-                        .Where(x => x.AccountId == message.AccountId)
-                        .FirstOrDefaultAsync();
-                    admin.IsActive = message.IsActive;
-                    _unitOfRepository.Admin.Update(admin);
-                    await _unitOfRepository.CompleteAsync();
-                    break;
-                }
                 case SystemRole.Customer:
                 {
                     var customer = await _unitOfRepository.Customer
-                        .Where(x => x.AccountId == message.AccountId)
+                        .Where(x => x.Id.ToString() == message.AccountId)
                         .FirstOrDefaultAsync();
                     customer.IsActive = message.IsActive;
                     _unitOfRepository.Customer.Update(customer);
@@ -54,7 +44,7 @@ public class UpdateUserConsumer : IConsumer<UpdateUser>
                 case SystemRole.Restaurant:
                 {
                     var restaurant = await _unitOfRepository.Restaurant
-                        .Where(x => x.AccountId == message.AccountId)
+                        .Where(x => x.Id.ToString() == message.AccountId)
                         .FirstOrDefaultAsync();
                     restaurant.IsActive = message.IsActive;
                     _unitOfRepository.Restaurant.Update(restaurant);
@@ -65,7 +55,7 @@ public class UpdateUserConsumer : IConsumer<UpdateUser>
                 case SystemRole.ServiceStaff:
                 {
                     var employee = await _unitOfRepository.Employee
-                        .Where(x => x.AccountId == message.AccountId)
+                        .Where(x => x.Id.ToString() == message.AccountId)
                         .FirstOrDefaultAsync();
                     employee.IsActive = message.IsActive;
                     _unitOfRepository.Employee.Update(employee);

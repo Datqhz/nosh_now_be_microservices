@@ -4,7 +4,7 @@ using OrderService.Repositories.Interfaces;
 
 namespace OrderService.Repositories.Implements;
 
-public class FoodRepository : GenericRepository<Food>, IFoodRepository
+public class FoodRepository : GenericRepository<Food> , IFoodRepository
 {
     public FoodRepository(OrderDbContext context) : base(context)
     {

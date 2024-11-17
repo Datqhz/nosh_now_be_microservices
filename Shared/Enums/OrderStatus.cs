@@ -10,5 +10,6 @@ public enum OrderStatus
     Arrived,
     Success,
     Failed,
-    Canceled
+    Canceled,
+    Rejected,
 }

@@ -8,7 +8,10 @@ namespace OrderService.Repositories;
 public interface IUnitOfRepository
 {
     IEmployeeRepository Employee { get; }
-    IFoodRepository Food { get; }
+    public ICategoryRepository Category { get; }
+    public IFoodRepository Food { get; }
+    public IIngredientRepository Ingredient { get; }
+    public IRequiredIngredientRepository RequiredIngredient { get; }
     IRestaurantRepository Restaurant { get; }
     IShipperRepository Shipper { get; }
     ICustomerRepository Customer { get; }

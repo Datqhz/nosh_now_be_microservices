@@ -37,7 +37,7 @@ public class UpdateRestaurantProfileHandler : IRequestHandler<UpdateRestaurantPr
             var restaurant = await
                 (
                     from cus in _unitOfRepository.Restaurant.GetAll()
-                    where cus.AccountId == currentUserId
+                    where cus.Id.ToString().Equals(currentUserId)
                           && cus.IsActive
                     select cus
                 )

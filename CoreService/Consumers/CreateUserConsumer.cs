@@ -37,27 +37,15 @@ public class CreateUserConsumer : IConsumer<CreateUser>
             IUser user = null;
             switch (message.Role)
             {
-                case SystemRole.Admin:
-                {
-                    user = new Admin
-                    {
-                        DisplayName = message.DisplayName,
-                        Email = message.Email,
-                        Avatar = message.Avatar,
-                        AccountId = message.Id,
-                    };
-                    await _unitOfRepository.Admin.Add((Admin)user);
-                    break;
-                }
                 case SystemRole.Customer:
                 {
                     user = new Customer
                     {
+                        Id = new Guid(message.Id),
                         DisplayName = message.DisplayName,
                         PhoneNumber = message.PhoneNumber,
                         Email = message.Email,
                         Avatar = message.Avatar,
-                        AccountId = message.Id
                     };
                     await _unitOfRepository.Customer.Add((Customer)user);
                     break;
@@ -66,11 +54,11 @@ public class CreateUserConsumer : IConsumer<CreateUser>
                 {
                     user = new Restaurant
                     {
+                        Id = new Guid(message.Id),
                         DisplayName = message.DisplayName,
                         PhoneNumber = message.PhoneNumber,
                         Email = message.Email,
                         Avatar = message.Avatar,
-                        AccountId = message.Id,
                         Coordinate = message.Coordinate,
                     };
                     await _unitOfRepository.Restaurant.Add((Restaurant)user);
@@ -81,11 +69,11 @@ public class CreateUserConsumer : IConsumer<CreateUser>
                 {
                     user = new Employee
                     {
+                        Id = new Guid(message.Id),
                         DisplayName = message.DisplayName,
                         PhoneNumber = message.PhoneNumber,
                         Email = message.Email,
                         Avatar = message.Avatar,
-                        AccountId = message.Id,
                         IsActive = true,
                         RestaurantId = new Guid(message.RestaurantId),
                         Role = SystemRole.ServiceStaff == message.Role ? RestaurantRole.ServiceStaff : RestaurantRole.Chef,
@@ -107,12 +95,9 @@ public class CreateUserConsumer : IConsumer<CreateUser>
                 Avatar = message.Avatar,
                 Phone = message.PhoneNumber,
                 Role = message.Role,
+                RestaurantId = message.RestaurantId,
+                Coordinate = message.Coordinate,
             };
-            if (SystemRole.Restaurant == message.Role)
-            {
-                snapshotUser.Coordinate = message.Coordinate;
-            }
-
             await _sendEndpoint.SendMessage<CreateSnapshotUser>(snapshotUser, ExchangeType.Direct,
                 new CancellationToken());
         }

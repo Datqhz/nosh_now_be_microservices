@@ -17,4 +17,6 @@ public class CustomHttpContextAccessor : ICustomHttpContextAccessor
     }
     public string GetCurrentUserId() => _httpContextAccessor.HttpContext.User.FindFirst(Constants.Constants.CustomClaimTypes.AccountId)?.Value;
     public string GetClientId() => _httpContextAccessor.HttpContext.User.FindFirst(Constants.Constants.CustomClaimTypes.ClientId)?.Value;
+    
+    public string GetCurrentRole() => _httpContextAccessor.HttpContext.User.FindFirst(Constants.Constants.CustomClaimTypes.Role)?.Value;
 }

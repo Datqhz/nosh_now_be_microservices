@@ -3,6 +3,7 @@ using CommunicationService.Constants;
 using CommunicationService.Hubs;
 using CommunicationService.Hubs.Models;
 using CommunicationService.Models.Requests;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Shared.Enums;
@@ -59,7 +60,7 @@ public class NotifyOrderStatusChangeHandler : IRequestHandler<NotifyOrderStatusC
                 break;
             }
         }
-        await _hubContext.Clients.Client(storage.connections[request.AccountId]).NotifyOrderStatusChange(message);
+        await _hubContext.Clients.Client(request.AccountId).NotifyOrderStatusChange(message);
     }
     
     #endregion

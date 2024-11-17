@@ -14,5 +14,6 @@ public class RegisterPostProcessorPayload
     public Account Account { get; set; }
     public string Avatar { get; set; }
     public string DisplayName { get; set; }
+    public string? Coordinate { get; set; }
     public SystemRole Role { get; set; }
 }

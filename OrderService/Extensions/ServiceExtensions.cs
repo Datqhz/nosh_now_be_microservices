@@ -129,16 +129,6 @@ public static class ServiceExtensions
                 e.ConfigureConsumeTopology = false;
                 e.ConfigureConsumer <UpdateUserConsumer>(ctx);
             });
-            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(CreateFood)), e =>
-            {
-                e.ConfigureConsumeTopology = false;
-                e.ConfigureConsumer <CreateFoodConsumer>(ctx);
-            });
-            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateFood)), e =>
-            {
-                e.ConfigureConsumeTopology = false;
-                e.ConfigureConsumer <UpdateFoodConsumer>(ctx);
-            });
         });
         return services;
     }
