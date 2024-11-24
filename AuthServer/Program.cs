@@ -7,6 +7,7 @@ builder.Services
     .ConfigureDbContext(builder.Configuration)
     .ConfigureDependencyInjection()
     .ConfigureIdentityServer()
+    .AddAuthorizationSettings()
     .AddValidators()
     .ConfigureMediator()
     .AddCustomCors()
@@ -21,9 +22,10 @@ if (!app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowAnyOrigin");
 //app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseCors("AllowAllOrigins");
 app.UseIdentityServer();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

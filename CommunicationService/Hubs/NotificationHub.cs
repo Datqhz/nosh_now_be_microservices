@@ -25,6 +25,7 @@ public class NotificationHub :Hub<INotificationHub>
         Clients.Client(Context.ConnectionId).SendMessageConnection($"{Context.ConnectionId} - Connected");
         return base.OnConnectedAsync();
     }
+    
 }
 
 public interface INotificationHub

@@ -3,6 +3,7 @@ using AuthServer.Features.Commands.AccountCommands.Login;
 using AuthServer.Features.Commands.AccountCommands.Register;
 using AuthServer.Models.Requests;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Responses;
 
@@ -38,5 +39,19 @@ public class AuthenticationController : ControllerBase
     {
         var result = await _mediator.Send(new ConfirmVerificationEmailCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(result.StatusCode, result.ErrorMessage, result.ErrorMessage);
+    }
+    
+    [Authorize]
+    [HttpGet("test")]
+    public async Task<IActionResult> GetTokenTest([FromQuery] string test)
+    {
+        var Dot1 = test.IndexOf('.');
+        if (Dot1 == -1 || Dot1 == test.Length - 1)
+            return Ok();
+        var Dot2 = test.IndexOf('.', Dot1 + 1);
+        if (Dot2 == -1)
+            return Ok();
+        var Dot3 = Dot2 != test.Length - 1 ? test.IndexOf('.', Dot2 + 1) : -1;
+        return Ok();
     }
 }

@@ -61,6 +61,7 @@ public class ClientStore : IClientStore
                     AllowedGrantTypes = s.GrantTypes?.ToList() ?? new List<string>(),
                     ClientSecrets = s.Secrets?.Select(cs => new Secret(cs.Sha256())).ToList(),
                     AllowedScopes = s.Scopes?.ToList() ?? new List<string>(),
+                    AccessTokenType = AccessTokenType.Jwt, 
                 }).FirstOrDefault();
 
             return client;

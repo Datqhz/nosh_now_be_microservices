@@ -14,5 +14,6 @@ public class GetRestaurantsData
     public string RestaurantId { get; set; }
     public string RestaurantName { get; set; }
     public double Distance { get; set; }
+    public string Coordinate { get; set; }
     public string Avatar { get; set; }
 }

@@ -1,0 +1,75 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  authserver:
+    build:
+      context: "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE"
+      dockerfile: "AuthServer/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/AuthServer.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "authserver:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\baam0\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE\\AuthServer:/app:rw"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE:/src:rw"
+    working_dir: "/app"
+  communicationservice:
+    build:
+      context: "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE"
+      dockerfile: "CommunicationService/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/CommunicationService.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "communicationservice:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\baam0\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE\\CommunicationService:/app:rw"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE:/src:rw"
+    working_dir: "/app"
+  coreservice:
+    build:
+      context: "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE"
+      dockerfile: "CoreService/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/CoreService.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "coreservice:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\baam0\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE\\CoreService:/app:rw"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE:/src:rw"
+    working_dir: "/app"
+  orderservice:
+    build:
+      context: "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE"
+      dockerfile: "CoreService/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/CoreService.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "coreservice:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\baam0\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE\\CoreService:/app:rw"
+    - "C:\\Users\\baam0\\OneDrive\\Documents\\C#\\NoshNow.BE:/src:rw"
+    working_dir: "/app"

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Features.Commands.OrderCommands.CancelOrder;
 using OrderService.Features.Commands.OrderCommands.CheckoutOrder;
@@ -25,6 +26,7 @@ public class OrderController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpGet("GetByStatus")]
     public async Task<IActionResult> GetByStatus([FromQuery] OrderStatus status, CancellationToken cancellationToken)
     {
@@ -32,6 +34,7 @@ public class OrderController : ControllerBase
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
+    [Authorize]
     [HttpGet("Employee-GetByStatus")]
     public async Task<IActionResult> GetByStatusForEmployee([FromQuery] OrderStatus status, CancellationToken cancellationToken)
     {
@@ -39,13 +42,15 @@ public class OrderController : ControllerBase
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
+    [Authorize]
     [HttpGet("GetOrderInit/{restaurantId}")]
-    public async Task<IActionResult> GetOrderInit(string restaurantId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOrderInit([FromRoute] string restaurantId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOrderInitialCommand(restaurantId), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
+    [Authorize]
     [HttpPost("Checkout")]
     public async Task<IActionResult> CheckoutOrder([FromBody] CheckoutOrderRequest request, CancellationToken cancellationToken)
     {
@@ -53,6 +58,7 @@ public class OrderController : ControllerBase
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     
+    [Authorize]
     [HttpGet("Cancel/{orderId}")]
     public async Task<IActionResult> CancelOrder(int orderId, CancellationToken cancellationToken)
     {
@@ -60,6 +66,7 @@ public class OrderController : ControllerBase
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     
+    [Authorize]
     [HttpGet("Reject/{orderId}")]
     public async Task<IActionResult> RejectOrder(int orderId, CancellationToken cancellationToken)
     {

@@ -91,12 +91,6 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
             await _unitOfRepository.CompleteAsync();
             await _unitOfRepository.CommitAsync();
             
-            // if (orderDetail is null)
-            // {
-            //     response.StatusCode = (int)ResponseStatusCode.NotFound;
-            //     return response;
-            // }
-            // _unitOfRepository.OrderDetail.Update(orderDetail);
             response.PostProcessorData = new CheckoutOrderPostProcessorData
             {
                 Payload = payload,

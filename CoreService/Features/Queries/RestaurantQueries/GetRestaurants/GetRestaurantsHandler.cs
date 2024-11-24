@@ -31,24 +31,26 @@ public class GetRestaurantsHandler : IRequestHandler<GetRestaurantsQuery, GetRes
         {
             _logger.LogInformation(functionName);
             /* Todo: Join with calendar table to select restaurant status */
-            var pagination = await
-                (
-                    from res in _unitOfRepository.Restaurant.GetAll()
-                    let distance = LocationHelper.GetDistance(payload.Coordinate, res.Coordinate)
-                    where distance <= 10
-                        && (string.IsNullOrEmpty(payload.Keyword)
-                        || EF.Functions.ILike(res.DisplayName, payload.Keyword.ToILikePattern()))
-                    select new GetRestaurantsData
+            var pagination = await _unitOfRepository.Restaurant
+                .Where(res => 
+                    (
+                        string.IsNullOrEmpty(payload.Keyword)
+                        || EF.Functions.ILike(res.DisplayName, payload.Keyword.ToILikePattern())
+                    )
+                    && res.IsActive
+                )
+                .AsNoTracking()
+                .Select(res => new GetRestaurantsData
                     {
                         RestaurantId = res.Id.ToString(),
                         Avatar = res.Avatar,
-                        Distance = distance,
-                        RestaurantName = res.DisplayName
+                        Distance = LocationHelper.GetDistance(res.Coordinate, payload.Coordinate),
+                        RestaurantName = res.DisplayName,
+                        Coordinate = res.Coordinate
                     }
                 )
-                .AsNoTracking()
                 .ToListAsPageAsync(payload.PageNumber, payload.MaxPerPage, cancellationToken);
-
+                
             response.Data = pagination.Data;
             response.Paging = pagination.Paging;
             response.StatusCode = (int)ResponseStatusCode.Ok;

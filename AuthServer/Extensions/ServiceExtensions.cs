@@ -47,7 +47,7 @@ public static class ServiceExtensions
             })
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = "http://localhost:5092";
+                options.Authority = "http://localhost:5237";
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -61,6 +61,22 @@ public static class ServiceExtensions
             });
         services.AddTransient<ClaimsPrincipal>(provider =>
             provider.GetService<IHttpContextAccessor>().HttpContext?.User);
+        return services;
+    }
+    
+    public static IServiceCollection AddAuthorizationSettings(this IServiceCollection services)
+    {
+        services.AddAuthorization(option =>
+        {
+            option.AddPolicy("Customer",
+                policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim(claim => claim.Type == "scope" && claim.Value.Contains("Customer"))
+                ));
+            option.AddPolicy("Restaurant",
+                policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim(claim => claim.Type == "scope" && claim.Value.Contains("Restaurant"))
+                ));
+        });
         return services;
     }
     public static IServiceCollection AddCustomCors(this IServiceCollection services)

@@ -46,6 +46,7 @@ public class GetOrderInitialHandler : IRequestHandler<GetOrderInitialCommand, Ge
 
             if (order is null)
             {
+                _logger.LogInformation(functionName + " Order not found");
                 order = new Order
                 {
                     RestaurantId = restaurantId,

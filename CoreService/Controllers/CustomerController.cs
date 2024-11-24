@@ -1,4 +1,5 @@
-﻿using CoreService.Features.Commands.CustomerCommands.UpdateCustomerProfile;
+﻿using CoreService.Features.Commands;
+using CoreService.Features.Commands.CustomerCommands.UpdateCustomerProfile;
 using CoreService.Features.Queries.CustomerQueries;
 using CoreService.Models.Requests;
 using MediatR;
@@ -12,6 +13,7 @@ namespace CoreService.Controllers;
 public class CustomerController : ControllerBase
 {
     private readonly IMediator _mediator;
+
     public CustomerController
     (
         IMediator mediator
@@ -29,10 +31,18 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPut("UpdateProfile")]
-    public async Task<IActionResult> UpdateProfile(UpdateCustomerProfileRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProfile(UpdateCustomerProfileRequest request,
+        CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateCustomerProfileCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
-    
+
+    [HttpGet("dump")]
+    public async Task<IActionResult> GetDump(CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new DumpDataCommand(), cancellationToken);
+        return Ok();
+    }
+
 }

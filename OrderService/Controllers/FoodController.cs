@@ -1,6 +1,8 @@
 ﻿
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OrderService.Features.Commands;
 using OrderService.Features.Commands.CategoryCommands.UpdateCategory;
 using OrderService.Features.Commands.FoodCommands.CreateFood;
 using OrderService.Features.Commands.FoodCommands.DeleteFood;
@@ -66,5 +68,11 @@ public class FoodController : BaseResponse
     {
         var response = await _mediator.Send(new DeleteFoodCommand(foodId), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+    }
+    
+    [HttpGet("dump")]
+    public async Task GetDump(CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new DumpDataCommand(), cancellationToken);
     }
 }

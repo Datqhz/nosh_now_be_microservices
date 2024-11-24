@@ -29,7 +29,7 @@ public class GetFoodsByRestaurantHandler : IRequestHandler<GetFoodsByRestaurantQ
         {
             _logger.LogInformation(functionName);
             var foods = await _unitOfRepository.Food
-                .Where(x => x.RestaurantId.ToString().Equals(restaurantId))
+                .Where(x => x.RestaurantId.Equals(restaurantId))
                 .AsNoTracking()
                 .Select(x => new GetFoodsByRestaurantData
                 {
