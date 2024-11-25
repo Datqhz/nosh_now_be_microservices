@@ -58,6 +58,20 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
             return false;
         }
     }
+    
+    public bool UpdateRange(IEnumerable<T> entities)
+    {
+        try
+        {
+            _dbSet.UpdateRange(entities);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return false;
+        }
+    }
 
     public bool Delete(T entity)
     {

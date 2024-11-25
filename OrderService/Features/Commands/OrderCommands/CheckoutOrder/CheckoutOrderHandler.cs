@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OrderService.Data.Models;
 using OrderService.Enums;
 using OrderService.Models.Responses;
 using OrderService.Repositories;
@@ -36,6 +37,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
         
         try
         {
+            _logger.LogInformation(functionName);
             var currentUserId = _httpContextAccessor.GetCurrentUserId();
             var order = await _unitOfRepository.Order
                 .Where(x => x.Id == payload.OrderId)
@@ -52,35 +54,25 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
                 response.StatusCode = (int)ResponseStatusCode.Forbidden;
                 return response;
             }
-            
-            var orderDetails = await _unitOfRepository.OrderDetail
-                .Where(x => x.OrderId == payload.OrderId)
-                .ToListAsync(cancellationToken);
-            var foodIds = payload.OrderDetails.Select(x => x.FoodId).ToList();
-            
-            foreach (var record in payload.OrderDetails)
-            {
-                var orderDetail = orderDetails.FirstOrDefault(x => x.FoodId == record.FoodId);
-                if (orderDetail is null)
-                {
-                    continue;
-                }
-                
-                var foods = _unitOfRepository.Food.Where(x => foodIds.Contains(x.Id));
-                if (record.Option == ModifyOption.Update)
-                {
-                    var food = foods.FirstOrDefault(x => x.Id == record.FoodId);
-                    orderDetail.Amount = record.Amount;
-                    orderDetail.Price = food.Price;
-                    _unitOfRepository.OrderDetail.Update(orderDetail);
-                    continue;
-                }
 
-                if (record.Option == ModifyOption.Delete)
-                {
-                    _unitOfRepository.OrderDetail.Delete(orderDetail);
-                }
-            }
+            var orderDetails = await
+                (
+                    from od in _unitOfRepository.OrderDetail.GetAll()
+                    join f in _unitOfRepository.Food.GetAll()
+                        on od.FoodId equals f.Id
+                    where od.OrderId == order.Id
+                    select new OrderDetail
+                    {
+                        OrderId = order.Id,
+                        FoodId = od.FoodId,
+                        Amount = od.Amount,
+                        Status = od.Status,
+                        Id = od.Id,
+                        Price = f.Price,
+                    }
+                )
+                .ToListAsync(cancellationToken);
+            _unitOfRepository.OrderDetail.UpdateRange(orderDetails);
             
             order.DeliveryInfo = payload.DeliveryInfo;
             order.ShippingFee = payload.ShippingFee;

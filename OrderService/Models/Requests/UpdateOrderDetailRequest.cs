@@ -4,6 +4,6 @@ namespace OrderService.Models.Requests;
 
 public class UpdateOrderDetailRequest
 {
-    public int OrderDetailId { get; set; }
+    public long OrderDetailId { get; set; }
     public int Amount { get; set; }
 }

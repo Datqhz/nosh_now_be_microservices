@@ -1,6 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Data.Models;
+using OrderService.Features.Commands.OrderDetailCommands.CreateOrderDetail;
+using OrderService.Features.Commands.OrderDetailCommands.DeleteOrderDetail;
 using OrderService.Features.Commands.OrderDetailCommands.UpdateOrderDetail;
 using OrderService.Features.Commands.OrderDetailCommands.UpdatePrepareStatus;
 using OrderService.Models.Requests;
@@ -8,6 +11,7 @@ using Shared.Responses;
 
 namespace OrderService.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class OrderDetailController : ControllerBase
@@ -20,11 +24,25 @@ public class OrderDetailController : ControllerBase
     {
         _mediator = mediator;
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateOrderDetail([FromBody] CreateOrderDetailRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new CreateOrderDetailCommand(request), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
+    }
 
     [HttpPut]
     public async Task<IActionResult> UpdateOrderDetail([FromBody] UpdateOrderDetailRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateOrderDetailCommand(request), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteOrderDetail([FromRoute] long id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new DeleteOrderDetailCommand(id), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     
@@ -34,4 +52,5 @@ public class OrderDetailController : ControllerBase
         var response = await _mediator.Send(new UpdatePrepareStatusCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
+    
 }

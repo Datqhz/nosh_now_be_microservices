@@ -27,7 +27,7 @@ public class GetOrderByStatusHandler : IRequestHandler<GetOrderByStatusQuery, Ge
     
     public async Task<GetOrderByStatusResponse> Handle(GetOrderByStatusQuery request, CancellationToken cancellationToken)
     {
-        var functionName = $"{nameof(GetOrderByStatusHandler)} => ";
+        var functionName = $"{nameof(GetOrderByStatusHandler)} =>";
         var response = new GetOrderByStatusResponse {StatusCode = (int)ResponseStatusCode.InternalServerError};
         
         try

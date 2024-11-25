@@ -5,6 +5,7 @@ using OrderService.Features.Commands.OrderCommands.CancelOrder;
 using OrderService.Features.Commands.OrderCommands.CheckoutOrder;
 using OrderService.Features.Commands.OrderCommands.GetOrderInitial;
 using OrderService.Features.Commands.OrderCommands.RejectOrder;
+using OrderService.Features.Queries.OrderQueries.GetOrderById;
 using OrderService.Features.Queries.OrderQueries.GetOrderByStatusEmployee;
 using OrderService.Features.Queries.OrderQueries.GetOrdersByStatus;
 using OrderService.Models.Requests;
@@ -47,6 +48,13 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> GetOrderInit([FromRoute] string restaurantId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOrderInitialCommand(restaurantId), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
+    }
+    
+    [HttpGet("{orderId}")]
+    public async Task<IActionResult> GetOrderInitById([FromRoute] long orderId, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetOrderByIdQuery(orderId), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     

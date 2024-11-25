@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 using Shared.Enums;
 
 namespace OrderService.Data.Models.Configurations;
@@ -21,7 +23,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(x => x.ShippingFee)
             .HasDefaultValue(0);
         builder.Property(x => x.DeliveryInfo)
-            .HasColumnType("jsonb");
+            .HasColumnType("jsonb")
+            .HasConversion(
+                v => JsonConvert.SerializeObject(v), 
+                v => JsonConvert.DeserializeObject<DeliveryInfo>(v));
         builder.Property(x => x.CustomerId)
             .IsRequired();
         builder.Property(x => x.RestaurantId)

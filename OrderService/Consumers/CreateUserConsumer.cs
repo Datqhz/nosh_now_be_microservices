@@ -30,10 +30,6 @@ public class CreateUserConsumer : IConsumer<CreateSnapshotUser>
             _logger.LogInformation(functionName);
             switch (message.Role)
             {
-                case SystemRole.Admin:
-                {
-                    break;
-                }
                 case SystemRole.Customer:
                 {
                     var user = new Customer

@@ -38,29 +38,29 @@ public class AfterCheckoutOrder : IRequestPostProcessor<CheckoutOrderCommand, Ch
             if (response.StatusCode == (int)ResponseStatusCode.Ok)
             {
                 /* 1. Re-Calculate total ingredient*/
-                foreach (var record in payload.OrderDetails)
-                {
-                    var ingredientsData = await
-                        (
-                            from ri in _unitOfRepository.RequiredIngredient.GetAll()
-                            join i in _unitOfRepository.Ingredient.GetAll()
-                                on ri.IngredientId equals i.Id
-                            where ri.FoodId == record.FoodId
-                            select new
-                            {
-                                Ingredient = ri.Ingredient,
-                                RequiredAmount = ri.Quantity
-                            }
-                        )
-                        .ToListAsync(cancellationToken);
-                    foreach (var ingredient in ingredientsData)
-                    {
-                        ingredient.Ingredient.Quantity -= ingredient.RequiredAmount * record.Amount;
-                        _unitOfRepository.Ingredient.Update(ingredient.Ingredient);
-                    }
-                }
-
-                await _unitOfRepository.CompleteAsync();
+                // foreach (var record in payload.OrderDetails)
+                // {
+                //     var ingredientsData = await
+                //         (
+                //             from ri in _unitOfRepository.RequiredIngredient.GetAll()
+                //             join i in _unitOfRepository.Ingredient.GetAll()
+                //                 on ri.IngredientId equals i.Id
+                //             where ri.FoodId == record.FoodId
+                //             select new
+                //             {
+                //                 Ingredient = ri.Ingredient,
+                //                 RequiredAmount = ri.Quantity
+                //             }
+                //         )
+                //         .ToListAsync(cancellationToken);
+                //     foreach (var ingredient in ingredientsData)
+                //     {
+                //         ingredient.Ingredient.Quantity -= ingredient.RequiredAmount * record.Amount;
+                //         _unitOfRepository.Ingredient.Update(ingredient.Ingredient);
+                //     }
+                // }
+                //
+                // await _unitOfRepository.CompleteAsync();
             
                 /* 2. Send a message to check status of order after 1 minute */
                 var totalPay =  await _unitOfRepository.OrderDetail
@@ -78,7 +78,7 @@ public class AfterCheckoutOrder : IRequestPostProcessor<CheckoutOrderCommand, Ch
                     Content = $"Your restaurant receive new order with total pay {totalPay}",
                     Receivers = receivers
                 };
-                await _sendEndpoint.SendMessage<NotifyOrderSchedule>(message, ExchangeType.Direct, cancellationToken);
+                // await _sendEndpoint.SendMessage<NotifyOrderSchedule>(message, ExchangeType.Direct, cancellationToken);
             }
         }
         catch (Exception ex)

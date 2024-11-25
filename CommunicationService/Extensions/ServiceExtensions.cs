@@ -8,6 +8,7 @@ using FluentValidation;
 using MassTransit;
 using MassTransit.Transports.Fabric;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -25,16 +26,19 @@ public static class ServiceExtensions
     public static IServiceCollection AddCustomAuthentication(this IServiceCollection services)
     {
         services
-            .AddAuthentication("Bearer")
-            .AddJwtBearer("Bearer", options =>
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.Authority = "http://localhost:5237";
                 options.RequireHttpsMetadata = false;
-                options.Audience = "Mobile";
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
-                    ValidateAudience = true,
+                    ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
                     RequireExpirationTime = true,
                     ValidateLifetime = true,
@@ -43,6 +47,7 @@ public static class ServiceExtensions
             });
         return services;
     }
+
     
     public static IServiceCollection AddCustomCors(this IServiceCollection services)
     {

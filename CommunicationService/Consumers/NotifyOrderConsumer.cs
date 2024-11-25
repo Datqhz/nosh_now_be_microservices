@@ -6,7 +6,7 @@ namespace CommunicationService.Consumers;
 
 public class NotifyOrderConsumer : IConsumer<NotifyOrder>
 {
-    public async  Task Consume(ConsumeContext<NotifyOrder> context)
+    public async Task Consume(ConsumeContext<NotifyOrder> context)
     {
         Console.WriteLine(JsonSerializer.Serialize(context.Message));
         await Task.CompletedTask;

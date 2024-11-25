@@ -7,6 +7,7 @@ builder.Services
     //.ConfigureDbContext(builder.Configuration)
     .ConfigureDependencyInjection()
     .AddValidators()
+    .AddCustomAuthentication()
     .ConfigureMediator()
     .AddCustomCors()
     .AddCustomHttpContextAccessor()

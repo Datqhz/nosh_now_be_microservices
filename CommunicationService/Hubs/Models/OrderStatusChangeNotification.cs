@@ -6,4 +6,5 @@ public class OrderStatusChangeNotification
 {
     public string Title { get; set; }
     public string Content { get; set; }
+    public string Receiver { get; set; }
 }

@@ -9,7 +9,6 @@ public class CheckoutOrderRequest
     public DeliveryInfo DeliveryInfo { get; set; }
     public string PaymentMethod { get; set; }
     public decimal ShippingFee { get; set; }
-    public List<CheckoutOrderDetailData> OrderDetails { get; set; }
 }
 
 public class CheckoutOrderDetailData

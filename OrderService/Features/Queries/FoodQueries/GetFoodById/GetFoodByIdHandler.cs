@@ -40,6 +40,7 @@ public class GetFoodByIdHandler : IRequestHandler<GetFoodByIdQuery, GetFoodByIdR
                     FoodPrice = x.Price,
                     FoodName = x.Name,
                     FoodImage = x.Image,
+                    FoodDescription = x.Description
                 })
                 .AsNoTracking()
                 .FirstOrDefaultAsync(cancellationToken);
