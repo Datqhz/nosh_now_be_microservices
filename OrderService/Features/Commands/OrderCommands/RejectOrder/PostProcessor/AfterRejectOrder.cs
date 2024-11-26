@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Models.Responses;
 using OrderService.Repositories;
+using Shared.Enums;
 using Shared.Extensions;
 using Shared.MassTransits.Contracts;
 using Shared.MassTransits.Core;
@@ -73,9 +74,10 @@ public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, Reject
                     .FirstOrDefaultAsync(cancellationToken);
                 var message = new NotifyOrder
                 {
-                    Title = $"Your order is rejected",
-                    Content = $"Your order {order.Id} was rejected by {restaurantName}",
-                    Receivers = new List<string>(){order.CustomerId}
+                    OrderId = request.OrderId.ToString(),
+                    OrderStatus = OrderStatus.Canceled,
+                    RestaurantName = restaurantName,
+                    Receivers = [order.CustomerId],
                 };
                 await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
             }

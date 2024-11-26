@@ -37,48 +37,28 @@ public class AfterCheckoutOrder : IRequestPostProcessor<CheckoutOrderCommand, Ch
         {
             if (response.StatusCode == (int)ResponseStatusCode.Ok)
             {
-                /* 1. Re-Calculate total ingredient*/
-                // foreach (var record in payload.OrderDetails)
-                // {
-                //     var ingredientsData = await
-                //         (
-                //             from ri in _unitOfRepository.RequiredIngredient.GetAll()
-                //             join i in _unitOfRepository.Ingredient.GetAll()
-                //                 on ri.IngredientId equals i.Id
-                //             where ri.FoodId == record.FoodId
-                //             select new
-                //             {
-                //                 Ingredient = ri.Ingredient,
-                //                 RequiredAmount = ri.Quantity
-                //             }
-                //         )
-                //         .ToListAsync(cancellationToken);
-                //     foreach (var ingredient in ingredientsData)
-                //     {
-                //         ingredient.Ingredient.Quantity -= ingredient.RequiredAmount * record.Amount;
-                //         _unitOfRepository.Ingredient.Update(ingredient.Ingredient);
-                //     }
-                // }
-                //
-                // await _unitOfRepository.CompleteAsync();
-            
-                /* 2. Send a message to check status of order after 1 minute */
-                var totalPay =  await _unitOfRepository.OrderDetail
-                    .Where(x => x.OrderId == payload.OrderId)
-                    .SumAsync(x => x.Amount * x.Price, cancellationToken);
+                /* 1. Send a message to check status of order after 1 minute */
+                var resName = await _unitOfRepository.Restaurant
+                    .Where(x => x.Id.Equals(response.PostProcessorData.RestaurantId))
+                    .AsNoTracking()
+                    .Select(x => x.Name)
+                    .FirstOrDefaultAsync(cancellationToken);
                 var order = await  _unitOfRepository.Order.GetById(payload.OrderId);
                 var receivers = await _unitOfRepository.Employee
                     .Where(x => x.RestaurantId.Equals(order.RestaurantId) && x.Role == RestaurantRole.ServiceStaff)
                     .AsNoTracking()
                     .Select(x => x.Id)
                     .ToListAsync(cancellationToken);
-                var message = new NotifyOrderSchedule
+                
+                // Send to service staff
+                var message = new NotifyOrder
                 {
-                    Title = $"You have new order",
-                    Content = $"Your restaurant receive new order with total pay {totalPay}",
+                    OrderId = payload.OrderId.ToString(),
+                    OrderStatus = OrderStatus.CheckedOut,
+                    RestaurantName = resName,
                     Receivers = receivers
                 };
-                // await _sendEndpoint.SendMessage<NotifyOrderSchedule>(message, ExchangeType.Direct, cancellationToken);
+                await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
             }
         }
         catch (Exception ex)

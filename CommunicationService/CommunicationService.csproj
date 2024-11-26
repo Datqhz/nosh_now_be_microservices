@@ -30,6 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Commands\NotifyCommands\" />
       <Folder Include="Features\Queries\" />
       <Folder Include="Models\Responses\" />
     </ItemGroup>

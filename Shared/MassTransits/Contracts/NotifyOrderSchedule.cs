@@ -1,8 +1,11 @@
-﻿namespace Shared.MassTransits.Contracts;
+﻿using Shared.Enums;
+
+namespace Shared.MassTransits.Contracts;
 
 public class NotifyOrderSchedule
 {
-    public string Title { get; set; }
-    public string Content { get; set; }
-    public List<string> Receivers { get; set; }
+    public string OrderId { get; set; }
+    public string RestaurantName { get; set; }
+    public OrderStatus OrderStatus { get; set; }
+    public List<string> Receivers { get; set; } = new();
 }

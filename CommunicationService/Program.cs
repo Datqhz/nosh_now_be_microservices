@@ -4,7 +4,7 @@ using Shared.HttpContextAccessor;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    //.ConfigureDbContext(builder.Configuration)
+    .ConfigureDbContext(builder.Configuration)
     .ConfigureDependencyInjection()
     .AddValidators()
     .AddCustomAuthentication()
@@ -12,7 +12,7 @@ builder.Services
     .AddCustomCors()
     .AddCustomHttpContextAccessor()
     .ConfigureSwagger()
-    //.AddCustomMassTransitRegistration()
+    .AddCustomMassTransitRegistration()
     .AddSignalRServer();
 builder.Services.AddControllers();
 var app = builder.Build();

@@ -1,6 +1,4 @@
-﻿using CommunicationService.Features.Commands.NotifyCommands.NotifyOrderStatusChange;
-using CommunicationService.Models.Requests;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommunicationService.Controllers;
@@ -18,12 +16,5 @@ public class NotificationController : ControllerBase
     {
         _mediator = mediator;
     }
-
-    [HttpPost("SendNotify")]
-    public async Task<IActionResult> SendNotify([FromBody] NotifyOrderStatusChangeRequest request,
-        CancellationToken token)
-    {
-        await _mediator.Send(new NotifyOrderStatusChangeCommand(request), token);
-        return Ok();
-    }
+    
 }
