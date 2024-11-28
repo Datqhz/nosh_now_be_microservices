@@ -6,6 +6,7 @@ using OrderService.Features.Commands.OrderCommands.CheckoutOrder;
 using OrderService.Features.Commands.OrderCommands.GetOrderInitial;
 using OrderService.Features.Commands.OrderCommands.RejectOrder;
 using OrderService.Features.Queries.OrderQueries.GetOrderById;
+using OrderService.Features.Queries.OrderQueries.PrepareOrder;
 using OrderService.Features.Queries.OrderQueries.GetOrderByStatusEmployee;
 using OrderService.Features.Queries.OrderQueries.GetOrdersByStatus;
 using OrderService.Models.Requests;
@@ -29,9 +30,9 @@ public class OrderController : ControllerBase
 
     [Authorize]
     [HttpGet("GetByStatus")]
-    public async Task<IActionResult> GetByStatus([FromQuery] OrderStatus status, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByStatus([FromQuery] GetOrderByStatusRequest request, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetOrderByStatusQuery(status), cancellationToken);
+        var response = await _mediator.Send(new GetOrderByStatusQuery(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
@@ -51,8 +52,15 @@ public class OrderController : ControllerBase
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
-    [HttpGet("{orderId}")]
+    [HttpGet("PrepareOrder/{orderId}")]
     public async Task<IActionResult> GetOrderInitById([FromRoute] long orderId, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new PrepareOrderQuery(orderId), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
+    }
+    
+    [HttpGet("{orderId}")]
+    public async Task<IActionResult> GetOrderById([FromRoute] long orderId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOrderByIdQuery(orderId), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);

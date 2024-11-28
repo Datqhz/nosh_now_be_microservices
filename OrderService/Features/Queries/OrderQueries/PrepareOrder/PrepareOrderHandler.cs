@@ -6,17 +6,17 @@ using Shared.Enums;
 using Shared.HttpContextAccessor;
 using Shared.Responses;
 
-namespace OrderService.Features.Queries.OrderQueries.GetOrderById;
+namespace OrderService.Features.Queries.OrderQueries.PrepareOrder;
 
-public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, GetOrderByIdResponse>
+public class PrepareOrderHandler : IRequestHandler<PrepareOrderQuery, PrepareOrderResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<GetOrderByIdHandler> _logger;
+    private readonly ILogger<PrepareOrderHandler> _logger;
     private readonly ICustomHttpContextAccessor _httpContextAccessor;
-    public GetOrderByIdHandler
+    public PrepareOrderHandler
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<GetOrderByIdHandler> logger,
+        ILogger<PrepareOrderHandler> logger,
         ICustomHttpContextAccessor httpContextAccessor
     )
     {
@@ -25,39 +25,29 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, GetOrderBy
         _httpContextAccessor = httpContextAccessor;
     }
     
-    public async Task<GetOrderByIdResponse> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
+    public async Task<PrepareOrderResponse> Handle(PrepareOrderQuery request, CancellationToken cancellationToken)
     {
         var orderId = request.OrderId;
-        var functionName = $"{nameof(GetOrderByIdHandler)} OrderId = {orderId} =>";
-        var response = new GetOrderByIdResponse {StatusCode = (int)ResponseStatusCode.InternalServerError};
+        var functionName = $"{nameof(PrepareOrderHandler)} OrderId = {orderId} =>";
+        var response = new PrepareOrderResponse {StatusCode = (int)ResponseStatusCode.InternalServerError};
         
         try
         {
+            var currentUserId = _httpContextAccessor.GetCurrentUserId();
             _logger.LogInformation(functionName);
             var order = await
                 (
-                    from o in _unitOfRepository.Order
-                        .Where( o => o.Id == orderId
-                               && o.Status != OrderStatus.Init)
+                    from o in _unitOfRepository.Order.GetAll()
                     join res in _unitOfRepository.Restaurant.GetAll()
                         on o.RestaurantId equals res.Id
-                    join cus in _unitOfRepository.Customer.GetAll()
-                        on o.CustomerId equals cus.Id
-                    join s in _unitOfRepository.Shipper.GetAll()
-                        on o.ShipperId equals s.Id into oi
-                    from i in oi.DefaultIfEmpty()
-                    select new GetOrderByIdData
+                    where
+                        o.Id == orderId
+                        && o.Status == OrderStatus.Init
+                    select new PrepareOrderData
                     {
                         OrderId = o.Id,
                         RestaurantName = res.Name,
-                        RestaurantCoordinate = res.Coordinate,
-                        ShippingFee = o.ShippingFee,
-                        OrderDate = o.OrderDate,
-                        DeliveryInfo = o.DeliveryInfo,
-                        ShipperImage = i.Avatar,
-                        ShipperName = i.Name,
-                        CustomerName = cus.Name,
-                        OrderStatus = o.Status,
+                        RestaurantCoordinate = res.Coordinate
                     }
                 )
                 .AsNoTracking()
@@ -73,7 +63,7 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, GetOrderBy
                     join food in _unitOfRepository.Food.GetAll()
                         on od.FoodId equals food.Id
                     where od.OrderId == orderId
-                    select new OrderDetailData
+                    select new PrepareOrderOrderDetailData
                     {
                         OrderDetailId = od.Id,
                         FoodName = food.Name,
@@ -88,7 +78,6 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, GetOrderBy
             var totalPay = orderDetails.Sum(x => x.Amount * x.FoodPrice);
             order.OrderDetails = orderDetails;
             order.Substantial = totalPay;
-            order.Total = order.Substantial + order.ShippingFee;
             response.StatusCode = (int)ResponseStatusCode.Ok;
             response.Data = order;
         }

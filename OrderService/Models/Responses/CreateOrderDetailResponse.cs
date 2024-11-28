@@ -4,5 +4,5 @@ namespace OrderService.Models.Responses;
 
 public class CreateOrderDetailResponse : BaseResponse
 {
-    public int Data { get; set; }
+    public long Data { get; set; }
 }

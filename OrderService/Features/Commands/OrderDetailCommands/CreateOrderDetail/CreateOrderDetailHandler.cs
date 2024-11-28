@@ -74,9 +74,10 @@ public class CreateOrderDetailHandler : IRequestHandler<CreateOrderDetailCommand
                 Status = PrepareStatus.Preparing,
                 Price = 0
             };
-            await _unitOfRepository.OrderDetail.Add(orderDetail);
+            var newOrder = await _unitOfRepository.OrderDetail.Add(orderDetail);
             await _unitOfRepository.CompleteAsync();
             response.StatusCode = (int)ResponseStatusCode.Created;
+            response.Data = newOrder.Id;
         }
         catch (Exception exception)
         {
