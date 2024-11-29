@@ -1,4 +1,4 @@
-﻿using CoreService.Features.Commands.CustomerCommands.UpdateCustomerProfile;
+﻿using CoreService.Features.Commands.RestaurantCommands.UpdateRestaurantProfile;
 using CoreService.Features.Queries.RestaurantQueries.GetRestaurantProfile;
 using CoreService.Features.Queries.RestaurantQueries.GetRestaurants;
 using CoreService.Models.Requests;
@@ -30,9 +30,9 @@ public class RestaurantController : ControllerBase
     }
 
     [HttpPut("UpdateProfile")]
-    public async Task<IActionResult> UpdateProfile(UpdateCustomerProfileRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProfile(UpdateRestaurantProfileRequest request, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new UpdateCustomerProfileCommand(request), cancellationToken);
+        var response = await _mediator.Send(new UpdateRestaurantProfileCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     
@@ -42,13 +42,4 @@ public class RestaurantController : ControllerBase
         var response = await _mediator.Send(new GetRestaurantsQuery(request), cancellationToken);
         return ResponseHelper.ToPaginationResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data, response.Paging);
     }
-    
-    
-    // [HttpGet("Category")]
-    // public async Task<IActionResult> UpdateProfile([FromQuery] GetRestaurantByCategoryRequest request, CancellationToken cancellationToken)
-    // {
-    //     var response = await _mediator.Send(new GetRestaurantByCategoryQuery(request), cancellationToken);
-    //     return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
-    // }
-    
 }

@@ -29,17 +29,40 @@ public class GetFoodsByRestaurantHandler : IRequestHandler<GetFoodsByRestaurantQ
         {
             _logger.LogInformation(functionName);
             var foods = await _unitOfRepository.Food
-                .Where(x => x.RestaurantId.Equals(restaurantId))
+                .Where(x => x.RestaurantId.Equals(restaurantId) && !x.IsDeleted)
                 .AsNoTracking()
                 .Select(x => new GetFoodsByRestaurantData
                 {
                     FoodId = x.Id,
                     Price = x.Price,
                     FoodName = x.Name,
-                    FoodImage = x.Image,
+                    FoodImage = x.Image
                 })
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+            var foodIds = foods.Select(x => x.FoodId).ToList();
+            var foodAmounts = await
+                (
+                    from ri in _unitOfRepository.RequiredIngredient
+                        .Where(x => foodIds.Contains(x.FoodId))
+                    join i in _unitOfRepository.Ingredient.GetAll()
+                        on ri.IngredientId equals i.Id
+                    let quantity = i.Quantity / ri.Quantity
+                    select new
+                    {
+                        ri.FoodId,
+                        quantity
+                    }
+                )
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
+            foreach (var food in foods)
+            {
+                food.Available = foodAmounts
+                    .Where(x => x.FoodId == food.FoodId)
+                    .Min(x => (int)Math.Floor(x.quantity));
+            }
             response.Data = foods;
             response.StatusCode = (int)ResponseStatusCode.Ok;
         }

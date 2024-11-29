@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using CoreService.Features.Commands.CustomerCommands.UpdateCustomerProfile;
+using CoreService.Features.Commands.EmployeeCommands.UpdateEmployeeProfile;
 using CoreService.Models.Responses;
 using MediatR.Pipeline;
 using Shared.Enums;

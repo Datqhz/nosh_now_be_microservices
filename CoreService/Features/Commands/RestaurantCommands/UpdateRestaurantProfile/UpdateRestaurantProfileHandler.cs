@@ -45,8 +45,8 @@ public class UpdateRestaurantProfileHandler : IRequestHandler<UpdateRestaurantPr
 
             if (restaurant == null)
             {
-                response.ErrorMessage = CoreServiceTranslation.CUS_ERR_01.ToString();
-                response.MessageCode = CoreServiceTranslation.CUS_ERR_01.ToString();
+                response.ErrorMessage = CoreServiceTranslation.RES_ERR_01.ToString();
+                response.MessageCode = CoreServiceTranslation.RES_ERR_01.ToString();
                 return response;
             }
             

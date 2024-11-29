@@ -32,7 +32,7 @@ public class GetIngredientsHandler : IRequestHandler<GetIngredientsQuery, GetIng
         try
         {
             var currentUserId = _httpContextAccessor.GetCurrentUserId();
-            functionName = $"{nameof(GetIngredientsHandler)} Restaurant {currentUserId}";
+            functionName = $"{nameof(GetIngredientsHandler)} Restaurant {currentUserId} =>";
             _logger.LogInformation(functionName);
 
             var ingredients = await _unitOfRepository.Ingredient

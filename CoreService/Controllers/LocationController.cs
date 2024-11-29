@@ -1,4 +1,4 @@
-﻿using CoreService.Features.Commands.CustomerCommands.UpdateCustomerProfile;
+﻿using CoreService.Features.Commands.EmployeeCommands.UpdateEmployeeProfile;
 using CoreService.Features.Commands.LocationCommands.CreateLocation;
 using CoreService.Features.Commands.LocationCommands.UpdateLocation;
 using CoreService.Features.Queries.RestaurantQueries.GetRestaurants;
