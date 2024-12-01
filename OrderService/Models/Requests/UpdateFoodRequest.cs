@@ -16,6 +16,7 @@ public class UpdateFoodRequest
 public class UpdateRequiredIngredientInput
 {
     public int RequiredIngredientId { get; set; }
+    public int IngredientId { get; set; } = 0;
     public double Quantity { get; set; }
     public ModifyOption ModifyOption { get; set; }
 }

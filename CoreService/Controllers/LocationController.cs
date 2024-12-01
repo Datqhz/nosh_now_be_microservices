@@ -45,10 +45,4 @@ public class LocationController : ControllerBase
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     
-    [HttpPost("Restaurants")]
-    public async Task<IActionResult> GetRestaurantNearBy([FromBody] GetRestaurantsRequest request, CancellationToken cancellationToken)
-    {
-        var response = await _mediator.Send(new GetRestaurantsQuery(request), cancellationToken);
-        return ResponseHelper.ToPaginationResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data, response.Paging);
-    }
 }

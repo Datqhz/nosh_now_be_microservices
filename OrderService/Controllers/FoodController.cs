@@ -53,7 +53,7 @@ public class FoodController : BaseResponse
     public async Task<IActionResult> AddFood([FromBody] CreateFoodRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new CreateFoodCommand(request), cancellationToken);
-        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
     [HttpPut]

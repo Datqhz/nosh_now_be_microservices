@@ -37,7 +37,7 @@ public class CreateIngredientHandler : IRequestHandler<CreateIngredientCommand, 
             _logger.LogInformation(functionName);
             var currentUserId = _httpContextAccessor.GetCurrentUserId();
 
-            var newIngredient = new Ingredient
+            var ingredient = new Ingredient
             {
                 Name = payload.IngredientName,
                 Quantity = payload.Quantity,
@@ -46,10 +46,11 @@ public class CreateIngredientHandler : IRequestHandler<CreateIngredientCommand, 
                 Image = payload.Image,
             };
 
-            await _unitOfRepository.Ingredient.Add(newIngredient);
+            var newIngredient = await _unitOfRepository.Ingredient.Add(ingredient);
             await _unitOfRepository.CompleteAsync();
 
             response.StatusCode = (int)ResponseStatusCode.Ok;
+            response.Data = newIngredient.Id;
         }
         catch (Exception ex)
         {

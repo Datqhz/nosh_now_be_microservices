@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shared.Helpers;
+using Shared.HttpClientCustom;
 using Shared.MassTransits;
 using Shared.MassTransits.Contracts;
 using Shared.Validations;
@@ -78,7 +79,7 @@ public static class ServiceExtensions
         services.AddDbContext<CoreDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
-            options.EnableSensitiveDataLogging();
+            options.EnableSensitiveDataLogging(false);
         });
         return services;
     }
@@ -120,6 +121,18 @@ public static class ServiceExtensions
         });
         return services;
     }
+
+    // public static IServiceCollection AddCustomHttpClient(this IServiceCollection services)
+    // {
+    //     var authClientConfig = new ClientConfig
+    //     {
+    //         BaseUrl = "http://localhost:5237",
+    //         Timeout = 5,
+    //         HttpClientTimeout = 5
+    //     };
+    //     services.AddCustomHttpClient()
+    //     return services;
+    // }
     public static IServiceCollection AddCustomMassTransitRegistration(this IServiceCollection services)
     {
         services.AddMassTransitRegistration(registrationConfigure: (ctx, cfg) =>

@@ -51,14 +51,19 @@ public class AfterCheckoutOrder : IRequestPostProcessor<CheckoutOrderCommand, Ch
                     .ToListAsync(cancellationToken);
                 
                 // Send to service staff
-                var message = new NotifyOrder
+                var data = new NotifyOrder
                 {
                     OrderId = payload.OrderId.ToString(),
                     OrderStatus = OrderStatus.CheckedOut,
                     RestaurantName = resName,
                     Receivers = receivers
                 };
-                await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
+                var message = new NotifyOrderSchedule
+                {
+                    Notification = data,
+                    DeliveryTime = TimeSpan.FromSeconds(30)
+                };
+                await _sendEndpoint.SendMessage<NotifyOrderSchedule>(message, ExchangeType.Direct, cancellationToken);
             }
         }
         catch (Exception ex)

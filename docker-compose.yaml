@@ -3,7 +3,7 @@
 name: noshnowbe
 services:
   rabbitmq:
-    image: rabbitmq:management
+    image: masstransit/rabbitmq
     ports:
       - 5672:5672
       - 15672:15672

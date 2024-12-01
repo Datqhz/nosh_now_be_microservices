@@ -92,6 +92,7 @@ public static class ServiceExtensions
         services.AddDbContext<OrderDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
+            options.EnableSensitiveDataLogging(false);
         });
         return services;
     }

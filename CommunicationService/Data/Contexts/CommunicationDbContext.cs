@@ -13,7 +13,7 @@ public class CommunicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("auth");
+        modelBuilder.HasDefaultSchema("core");
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CommunicationDbContext).Assembly);
         modelBuilder.ApplyConfiguration(new NotificationConfiguration());

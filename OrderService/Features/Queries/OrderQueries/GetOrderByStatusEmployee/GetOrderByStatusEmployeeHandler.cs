@@ -40,10 +40,16 @@ public class GetOrderByStatusEmployeeHandler : IRequestHandler<GetOrderByStatusE
                 .Where(x => x.Id == currentUserId)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(cancellationToken);
-
+            
+            var compareId = ""; // If current user is restaurant
             if (employee is null)
             {
                 _logger.LogInformation(functionName + $"{currentUserId} is not found");
+                compareId = currentUserId;
+            }
+            else
+            {
+                compareId = employee.RestaurantId;
             }
             
             var orders = await
@@ -52,8 +58,9 @@ public class GetOrderByStatusEmployeeHandler : IRequestHandler<GetOrderByStatusE
                     join res in _unitOfRepository.Restaurant.GetAll()
                         on o.RestaurantId equals res.Id
                     where
-                        o.RestaurantId == employee.RestaurantId
+                        o.RestaurantId == compareId
                         && o.Status == request.OrderStatus
+                        && o.Status != OrderStatus.Init
                         && (o.Status != OrderStatus.CheckedOut
                             || DateTime.Now - o.OrderDate > TimeSpan.FromMinutes(1))
                     select new GetOrderByStatusEmployeeData

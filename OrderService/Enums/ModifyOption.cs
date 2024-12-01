@@ -2,6 +2,7 @@
 
 public enum ModifyOption
 {
+    Add,
     Update,
     Delete
 }

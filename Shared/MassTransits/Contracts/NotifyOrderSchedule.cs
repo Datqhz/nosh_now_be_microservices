@@ -4,8 +4,6 @@ namespace Shared.MassTransits.Contracts;
 
 public class NotifyOrderSchedule
 {
-    public string OrderId { get; set; }
-    public string RestaurantName { get; set; }
-    public OrderStatus OrderStatus { get; set; }
-    public List<string> Receivers { get; set; } = new();
+    public TimeSpan DeliveryTime { get; set; }
+    public NotifyOrder Notification { get; set; }
 }

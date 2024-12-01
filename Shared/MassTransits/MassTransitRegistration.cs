@@ -17,6 +17,7 @@ public static class MassTransitRegistration
         services.AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
+            x.AddDelayedMessageScheduler();
             x.AddConsumers(Assembly.GetEntryAssembly());
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -25,6 +26,7 @@ public static class MassTransitRegistration
                     h.Username("guest");
                     h.Password("guest");
                 });  
+                cfg.UseDelayedMessageScheduler();
                 registrationConfigure?.Invoke(context, cfg);
                 cfg.ConfigureEndpoints(context);
             });

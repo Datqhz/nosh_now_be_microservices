@@ -90,7 +90,7 @@ public class CreateUserConsumer : IConsumer<CreateUser>
             await _unitOfRepository.CompleteAsync();
             var snapshotUser = new CreateSnapshotUser
             {
-                Id = user.Id.ToString(),
+                Id = message.Id,
                 DisplayName = message.DisplayName,
                 Avatar = message.Avatar,
                 Phone = message.PhoneNumber,

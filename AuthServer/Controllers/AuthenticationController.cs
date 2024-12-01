@@ -1,4 +1,6 @@
-﻿using AuthServer.Features.Commands.AccountCommands.ConfirmVerificationEmail;
+﻿using AuthServer.Features.Commands.AccountCommands.ChangePassword;
+using AuthServer.Features.Commands.AccountCommands.ConfirmVerificationEmail;
+using AuthServer.Features.Commands.AccountCommands.DeleteAccount;
 using AuthServer.Features.Commands.AccountCommands.Login;
 using AuthServer.Features.Commands.AccountCommands.Register;
 using AuthServer.Models.Requests;
@@ -38,6 +40,20 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> GetToken([FromQuery] ConfirmVerificationEmailRequest request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new ConfirmVerificationEmailCommand(request), cancellationToken);
+        return ResponseHelper.ToResponse(result.StatusCode, result.ErrorMessage, result.ErrorMessage);
+    }
+    
+    [HttpGet("DeleteAccount/{accountId}")]
+    public async Task<IActionResult> DeleteAccount([FromRoute] string accountId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new DeleteAccountCommand(accountId), cancellationToken);
+        return ResponseHelper.ToResponse(result.StatusCode, result.ErrorMessage, result.ErrorMessage);
+    }
+    
+    [HttpPut("ChangePassword")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new ChangePasswordCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(result.StatusCode, result.ErrorMessage, result.ErrorMessage);
     }
     
