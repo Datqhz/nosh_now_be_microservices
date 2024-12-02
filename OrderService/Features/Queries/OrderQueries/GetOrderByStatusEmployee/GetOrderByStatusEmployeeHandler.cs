@@ -44,7 +44,7 @@ public class GetOrderByStatusEmployeeHandler : IRequestHandler<GetOrderByStatusE
             var compareId = ""; // If current user is restaurant
             if (employee is null)
             {
-                _logger.LogInformation(functionName + $"{currentUserId} is not found");
+                _logger.LogInformation(functionName + $" {currentUserId} is not found");
                 compareId = currentUserId;
             }
             else

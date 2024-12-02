@@ -3,6 +3,7 @@ using MediatR.Pipeline;
 using Shared.Extensions;
 using Shared.MassTransits.Core;
 using Shared.MassTransits.Enums;
+using Shared.Responses;
 
 namespace CoreService.Features.Commands.EmployeeCommands.DeleteEmployee.PostProcessor;
 
@@ -26,12 +27,15 @@ public class AfterDeleteEmployee : IRequestPostProcessor<DeleteEmployeeCommand, 
 
         try
         {
-            var message = new Shared.MassTransits.Contracts.DeleteAccount()
+            if (response.StatusCode == (int)ResponseStatusCode.Ok)
             {
-                AccountId = request.EmployeeId,
-            };
+                var message = new Shared.MassTransits.Contracts.DeleteAccount()
+                {
+                    AccountId = request.EmployeeId,
+                };
             
-            await _sendEndpointCustomProvider.SendMessage<Shared.MassTransits.Contracts.DeleteAccount>(message, ExchangeType.Direct, cancellationToken);
+                await _sendEndpointCustomProvider.SendMessage<Shared.MassTransits.Contracts.DeleteAccount>(message, ExchangeType.Direct, cancellationToken);
+            }
         }
         catch (Exception ex)
         {

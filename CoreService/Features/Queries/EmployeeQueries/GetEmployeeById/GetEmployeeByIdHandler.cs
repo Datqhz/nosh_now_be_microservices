@@ -35,8 +35,7 @@ public class GetEmployeeByIdHandler : IRequestHandler<GetEmployeeByIdQuery, GetE
         try
         {
             var employee = await _unitOfRepository.Employee
-                .Where(x => x.IsActive
-                            && x.Id.ToString().Equals(employeeId))
+                .Where(x =>x.Id.ToString().Equals(employeeId))
                 .Select(x => new GetEmployeeByIdData
                 {
                     Id = x.Id.ToString(),
@@ -45,6 +44,7 @@ public class GetEmployeeByIdHandler : IRequestHandler<GetEmployeeByIdQuery, GetE
                     Email = x.Email,
                     Role = x.Role,
                     PhoneNumber = x.PhoneNumber,
+                    IsActive = x.IsActive
                 })
                 .AsNoTracking()
                 .FirstOrDefaultAsync(cancellationToken);

@@ -39,7 +39,6 @@ public class GetEmployeesHandler : IRequestHandler<GetEmployeesQuery, GetEmploye
                 (
                     from e in _unitOfRepository.Employee.GetAll()
                     where e.RestaurantId.ToString().Equals(currentUserId)
-                          && e.IsActive
                           && e.Role == payload.Role
                     select new GetEmployeesData
                     {
@@ -49,6 +48,7 @@ public class GetEmployeesHandler : IRequestHandler<GetEmployeesQuery, GetEmploye
                         Email = e.Email,
                         Role = e.Role,
                         PhoneNumber = e.PhoneNumber,
+                        IsActive = e.IsActive
                     }
                 )
                 .AsNoTracking()

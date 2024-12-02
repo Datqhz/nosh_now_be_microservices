@@ -40,7 +40,7 @@ public class DeleteEmployeeHandler : IRequestHandler<DeleteEmployeeCommand, Dele
                     from e in _unitOfRepository.Employee.GetAll()
                     where e.Id.ToString().Equals(employeeId)
                           && e.IsActive
-                          && e.RestaurantId.Equals(restaurantId)
+                          && e.RestaurantId.ToString().Equals(restaurantId)
                     select e
                 )
                 .FirstOrDefaultAsync(cancellationToken);

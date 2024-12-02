@@ -44,7 +44,8 @@ public class AfterRegisterPostProcessor : IRequestPostProcessor<RegisterCommand,
                     Avatar = response.Data.Avatar,
                     DisplayName = response.Data.DisplayName,
                     Role = response.Data.Role,
-                    Coordinate = response.Data.Coordinate
+                    Coordinate = response.Data.Coordinate,
+                    RestaurantId = request.Payload.RestaurantId
                 };
                 var sendVerificationEmailEvent = new SendVerificationEmail
                 {

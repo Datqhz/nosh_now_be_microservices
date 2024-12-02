@@ -40,22 +40,29 @@ public class UpdateEmployeeProfileHandler : IRequestHandler<UpdateEmployeeProfil
                     from e in _unitOfRepository.Employee.GetAll()
                     where e.Id.ToString().Equals(payload.EmployeeId)
                           && e.IsActive
-                          && e.RestaurantId.Equals(currentUserId)
                     select e
                 )
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (employee is null)
             {
-                _logger.LogWarning($"{functionName} {payload.EmployeeId} not found ord no permission");
-                response.ErrorMessage = "Employee not found or no permission";
+                _logger.LogWarning($"{functionName} {payload.EmployeeId} not found");
+                response.ErrorMessage = "Employee not found";
+                return response;
+            }
+
+            var havePermission = employee.Id.ToString().Equals(payload.EmployeeId) ||
+                                 employee.RestaurantId.ToString().Equals(payload.EmployeeId);
+            if (!havePermission)
+            {
+                _logger.LogWarning($"{functionName} {payload.EmployeeId} No permission");
+                response.ErrorMessage = "No permission";
                 return response;
             }
             
             employee.Avatar = payload.Avatar;
             employee.PhoneNumber = payload.PhoneNumber;
             employee.DisplayName = payload.DisplayName;
-            employee.Email = payload.Email;
             
             _unitOfRepository.Employee.Update(employee);
             await _unitOfRepository.CompleteAsync();
