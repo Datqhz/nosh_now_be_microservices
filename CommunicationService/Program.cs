@@ -25,6 +25,6 @@ if (!app.Environment.IsProduction())
 app.UseRouting();
 app.UseCors("AllowAllOrigins");
 //app.UseMiddleware<ErrorHandlingMiddleware>();
-//app.UseAuthorization();
+app.UseAuthorization();
 app.AddSignalREndpoints();
 app.Run();

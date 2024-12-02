@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Security.Claims;
+using AuthServer.Consumers;
 using AuthServer.Core;
 using AuthServer.Data.DbContext;
 using AuthServer.Data.Models;
@@ -114,7 +115,7 @@ public static class ServiceExtensions
         services.AddDbContext<AuthDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
-            options.EnableSensitiveDataLogging();
+            options.EnableSensitiveDataLogging(false);
         });
         return services;
     }
@@ -159,7 +160,14 @@ public static class ServiceExtensions
     
     public static IServiceCollection AddCustomMassTransitRegistration(this IServiceCollection services)
     {
-        services.AddMassTransitRegistration();
+        services.AddMassTransitRegistration(registrationConfigure: (ctx, cfg) =>
+        {
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(DeleteAccount)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer <DeleteAccountConsumer>(ctx);
+            });
+        });
         return services;
     }
 }

@@ -26,12 +26,12 @@ public class AfterDeleteEmployee : IRequestPostProcessor<DeleteEmployeeCommand, 
 
         try
         {
-            var message = new Shared.MassTransits.Contracts.DeleteEmployee()
+            var message = new Shared.MassTransits.Contracts.DeleteAccount()
             {
-                EmployeeId = request.EmployeeId,
+                AccountId = request.EmployeeId,
             };
             
-            await _sendEndpointCustomProvider.SendMessage<Shared.MassTransits.Contracts.DeleteEmployee>(message, ExchangeType.Direct, cancellationToken);
+            await _sendEndpointCustomProvider.SendMessage<Shared.MassTransits.Contracts.DeleteAccount>(message, ExchangeType.Direct, cancellationToken);
         }
         catch (Exception ex)
         {

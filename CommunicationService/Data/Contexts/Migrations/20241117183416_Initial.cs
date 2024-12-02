@@ -12,11 +12,11 @@ namespace CommunicationService.Data.Contexts.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "auth");
+                name: "core");
 
             migrationBuilder.CreateTable(
                 name: "Notification",
-                schema: "auth",
+                schema: "core",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -33,7 +33,7 @@ namespace CommunicationService.Data.Contexts.Migrations
 
             migrationBuilder.CreateTable(
                 name: "SignalRConnection",
-                schema: "auth",
+                schema: "core",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -52,11 +52,11 @@ namespace CommunicationService.Data.Contexts.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Notification",
-                schema: "auth");
+                schema: "core");
 
             migrationBuilder.DropTable(
                 name: "SignalRConnection",
-                schema: "auth");
+                schema: "core");
         }
     }
 }

@@ -62,6 +62,7 @@ public class CreateFoodHandler : IRequestHandler<CreateFoodCommand, CreateFoodRe
             await _unitOfRepository.CompleteAsync();
             
             response.StatusCode = (int)ResponseStatusCode.Ok;
+            response.Data = newFood.Id;
         }
         catch (Exception ex)
         {

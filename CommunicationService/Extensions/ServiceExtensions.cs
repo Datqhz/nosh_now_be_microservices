@@ -44,7 +44,25 @@ public static class ServiceExtensions
                     ValidateLifetime = true,
                     IssuerSigningKey = CryptographyHelper.CreateRsaKey()
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        Console.WriteLine(context.HttpContext.Request.Path);
+                        Console.WriteLine($"accessToken: {accessToken}");
+                        // If the request is for SignalR and contains an access token, extract it
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            path.StartsWithSegments("/order-status"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
+        
         return services;
     }
 
@@ -83,7 +101,7 @@ public static class ServiceExtensions
         services.AddDbContext<CommunicationDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
-            options.EnableSensitiveDataLogging();
+            options.EnableSensitiveDataLogging(false);
         });
         return services;
     }
@@ -135,6 +153,16 @@ public static class ServiceExtensions
                 e.ConfigureConsumeTopology = false;
                 e.ConfigureConsumer<SendVerificationEmailConsumer>(ctx);
             });
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(NotifyOrderSchedule)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer<ScheduleNotificationConsumer>(ctx);
+            });
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(NotifyOrder)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer<NotifyOrderConsumer>(ctx);
+            });
         });
         return services;
     }
@@ -146,8 +174,7 @@ public static class ServiceExtensions
                 options.KeepAliveInterval = TimeSpan.FromDays(365); 
                 options.EnableDetailedErrors = true;
             })
-            .AddMessagePackProtocol()
-            ;
+            .AddMessagePackProtocol();
         return services;
     }
     public static void AddSignalREndpoints(this IApplicationBuilder app)

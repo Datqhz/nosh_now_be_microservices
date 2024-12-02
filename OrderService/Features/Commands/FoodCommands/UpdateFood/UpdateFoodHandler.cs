@@ -69,6 +69,17 @@ public class UpdateFoodHandler : IRequestHandler<UpdateFoodCommand, UpdateFoodRe
             /* 2. Update required ingredient */
             foreach (var ingredient in payload.Ingredients)
             {
+                if (ingredient.ModifyOption == ModifyOption.Add)
+                {
+                    var newRecord = new RequiredIngredient
+                    {
+                        FoodId = food.Id,
+                        IngredientId = ingredient.IngredientId,
+                        Quantity = ingredient.Quantity,
+                    };
+                    await _unitOfRepository.RequiredIngredient.Add(newRecord);
+                    continue;
+                }
                 var record = requiredIngredients
                     .FirstOrDefault(x => x.Id == ingredient.RequiredIngredientId);
                 if (record is null)

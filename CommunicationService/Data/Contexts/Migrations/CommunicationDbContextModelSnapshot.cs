@@ -16,7 +16,7 @@ namespace CommunicationService.Data.Contexts.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("auth")
+                .HasDefaultSchema("core")
                 .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -48,7 +48,7 @@ namespace CommunicationService.Data.Contexts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notification", "auth");
+                    b.ToTable("Notification", "core");
                 });
 
             modelBuilder.Entity("CommunicationService.Data.Models.SignalRConnection", b =>
@@ -69,7 +69,7 @@ namespace CommunicationService.Data.Contexts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SignalRConnection", "auth");
+                    b.ToTable("SignalRConnection", "core");
                 });
 #pragma warning restore 612, 618
         }

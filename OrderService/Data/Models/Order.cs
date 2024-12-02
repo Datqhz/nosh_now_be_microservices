@@ -1,9 +1,13 @@
-﻿using Shared.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Shared.Enums;
 
 namespace OrderService.Data.Models;
 
 public class Order
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
     public DateTime OrderDate { get; set; }
     public decimal ShippingFee { get; set; }
