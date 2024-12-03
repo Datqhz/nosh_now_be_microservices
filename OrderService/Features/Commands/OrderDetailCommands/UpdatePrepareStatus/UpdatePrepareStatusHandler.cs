@@ -31,7 +31,7 @@ public class UpdatePrepareStatusHandler : IRequestHandler<UpdatePrepareStatusCom
     {
         var payload = request.Payload;
         var functionName = $"{nameof(UpdatePrepareStatusHandler)} Payload : {JsonSerializer.Serialize(payload)}";
-        var response = new UpdatePrepareStatusResponse {StatusCode = (int)ResponseStatusCode.BadRequest};
+        var response = new UpdatePrepareStatusResponse {StatusCode = (int)ResponseStatusCode.NotFound};
 
         try
         {
@@ -40,18 +40,28 @@ public class UpdatePrepareStatusHandler : IRequestHandler<UpdatePrepareStatusCom
 
             if (payload.Input.Any())
             {
+                response.StatusCode = (int)ResponseStatusCode.Ok;
                 return response;
             }
 
             var order = await _unitOfRepository.Order
                 .Where(x => x.Id == payload.OrderId)
                 .FirstOrDefaultAsync(cancellationToken);
+            if (order is null)
+            {
+                response.ErrorMessage = "Order not found";
+                return response;
+            }
+            
             var chef = await _unitOfRepository.Employee
                 .Where(x => x.Id.Equals(currentUserId) && x.Role == RestaurantRole.Chef &&
                             x.RestaurantId == order.RestaurantId)
                 .FirstOrDefaultAsync(cancellationToken);
+            
             if (chef is null)
             {
+                response.StatusCode = (int)ResponseStatusCode.Forbidden;
+                response.ErrorMessage = "No have permission";
                 return response;
             }
 

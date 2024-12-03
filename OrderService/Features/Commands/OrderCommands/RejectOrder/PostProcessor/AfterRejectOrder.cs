@@ -78,6 +78,7 @@ public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, Reject
                     OrderStatus = OrderStatus.Canceled,
                     RestaurantName = restaurantName,
                     Receivers = [order.CustomerId],
+                    ReceiverType = ReceiverType.Customer
                 };
                 await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
             }

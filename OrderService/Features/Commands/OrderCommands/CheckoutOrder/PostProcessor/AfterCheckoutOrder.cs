@@ -38,11 +38,6 @@ public class AfterCheckoutOrder : IRequestPostProcessor<CheckoutOrderCommand, Ch
             if (response.StatusCode == (int)ResponseStatusCode.Ok)
             {
                 /* 1. Send a message to check status of order after 1 minute */
-                var resName = await _unitOfRepository.Restaurant
-                    .Where(x => x.Id.Equals(response.PostProcessorData.RestaurantId))
-                    .AsNoTracking()
-                    .Select(x => x.Name)
-                    .FirstOrDefaultAsync(cancellationToken);
                 var order = await  _unitOfRepository.Order.GetById(payload.OrderId);
                 var receivers = await _unitOfRepository.Employee
                     .Where(x => x.RestaurantId.Equals(order.RestaurantId) && x.Role == RestaurantRole.ServiceStaff)
@@ -55,8 +50,10 @@ public class AfterCheckoutOrder : IRequestPostProcessor<CheckoutOrderCommand, Ch
                 {
                     OrderId = payload.OrderId.ToString(),
                     OrderStatus = OrderStatus.CheckedOut,
-                    RestaurantName = resName,
-                    Receivers = receivers
+                    RestaurantName = "",
+                    Receivers = receivers,
+                    ReceiverType = ReceiverType.ServiceStaff,
+                    Total = response.PostProcessorData.Total,
                 };
                 var message = new NotifyOrderSchedule
                 {

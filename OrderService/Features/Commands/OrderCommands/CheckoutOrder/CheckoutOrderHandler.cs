@@ -85,7 +85,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
             
             response.PostProcessorData = new CheckoutOrderPostProcessorData
             {
-                Payload = payload,
+                Total = orderDetails.Sum(x => x.Amount * x.Price),
                 RestaurantId = order.RestaurantId,
             };
             response.StatusCode = (int)ResponseStatusCode.Ok;

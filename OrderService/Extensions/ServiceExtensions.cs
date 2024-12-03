@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using OrderService.Consumers;
 using OrderService.Data.DbContexts;
 using OrderService.Repositories;
+using OrderService.Services;
 using RabbitMQ.Client;
 using Shared.Helpers;
 using Shared.MassTransits;
@@ -99,7 +100,9 @@ public static class ServiceExtensions
 
     public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
     {
+        services.AddScoped<IShipperSimulation, ShipperSimulation>();
         services.AddScoped<IUnitOfRepository, UnitOfRepository>();
+        
         return services;
     }
     

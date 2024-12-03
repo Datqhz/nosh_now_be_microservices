@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OrderService.Features.Commands.OrderCommands.CancelOrder;
 using OrderService.Features.Commands.OrderCommands.CheckoutOrder;
 using OrderService.Features.Commands.OrderCommands.GetOrderInitial;
@@ -10,6 +11,8 @@ using OrderService.Features.Queries.OrderQueries.PrepareOrder;
 using OrderService.Features.Queries.OrderQueries.GetOrderByStatusEmployee;
 using OrderService.Features.Queries.OrderQueries.GetOrdersByStatus;
 using OrderService.Models.Requests;
+using OrderService.Repositories;
+using OrderService.Services;
 using Shared.Enums;
 using Shared.Responses;
 
@@ -20,12 +23,19 @@ namespace OrderService.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IUnitOfRepository _unitOfRepository;
+    private readonly IShipperSimulation _shipperSimulation;
     public OrderController
     (
-        IMediator mediator
+        IMediator mediator,
+        IUnitOfRepository unitOfRepository,
+        IShipperSimulation shipperSimulation
+        
     )
     {
         _mediator = mediator;
+        _unitOfRepository = unitOfRepository;
+        _shipperSimulation = shipperSimulation;
     }
 
     [Authorize]
@@ -88,5 +98,20 @@ public class OrderController : ControllerBase
     {
         var response = await _mediator.Send(new RejectOrderCommand(orderId), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+    }
+    
+    [HttpGet("Simulation/{orderId}")]
+    public async Task<IActionResult> TestSimulation([FromRoute] long orderId, CancellationToken cancellationToken)
+    {
+        var order = await _unitOfRepository.Order
+            .Where(x => x.Id == orderId && x.Status != OrderStatus.Init && x.Status != OrderStatus.Failed)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+        Task.Run(async () =>
+        {
+            await _shipperSimulation.HandleOrderAsync(order, 12, 12);
+        });
+        
+        return Ok();
     }
 }

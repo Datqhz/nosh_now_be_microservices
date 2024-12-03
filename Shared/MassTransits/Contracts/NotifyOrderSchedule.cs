@@ -1,6 +1,4 @@
-﻿using Shared.Enums;
-
-namespace Shared.MassTransits.Contracts;
+﻿namespace Shared.MassTransits.Contracts;
 
 public class NotifyOrderSchedule
 {

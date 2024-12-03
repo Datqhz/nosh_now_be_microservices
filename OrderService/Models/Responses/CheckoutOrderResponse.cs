@@ -10,6 +10,6 @@ public class CheckoutOrderResponse : BaseResponse
 
 public class CheckoutOrderPostProcessorData
 {
-    public CheckoutOrderRequest Payload { get; set; }
     public string RestaurantId { get; set; }
+    public decimal Total { get; set; }
 }

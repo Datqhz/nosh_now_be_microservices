@@ -6,6 +6,9 @@ using OrderService.Models.Responses;
 using OrderService.Repositories;
 using Shared.Enums;
 using Shared.Extensions;
+using Shared.MassTransits.Contracts;
+using Shared.MassTransits.Core;
+using Shared.MassTransits.Enums;
 using Shared.Responses;
 
 namespace OrderService.Features.Commands.OrderDetailCommands.UpdatePrepareStatus.PostProcessor;
@@ -14,14 +17,17 @@ public class AfterUpdatePrepareStatus : IRequestPostProcessor<UpdatePrepareStatu
 {
     private readonly IUnitOfRepository _unitOfRepository;
     private readonly ILogger<AfterUpdatePrepareStatus> _logger;
+    private readonly ISendEndpointCustomProvider _sendEndpoint;
     public AfterUpdatePrepareStatus
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<AfterUpdatePrepareStatus> logger
+        ILogger<AfterUpdatePrepareStatus> logger,
+        ISendEndpointCustomProvider sendEndpoint
     )
     {
         _unitOfRepository = unitOfRepository;
         _logger = logger;
+        _sendEndpoint = sendEndpoint;
     }
     public async Task Process(UpdatePrepareStatusCommand request, UpdatePrepareStatusResponse response, CancellationToken cancellationToken)
     {
@@ -42,12 +48,46 @@ public class AfterUpdatePrepareStatus : IRequestPostProcessor<UpdatePrepareStatu
                     order.Status = OrderStatus.ReadyToPickup;
                     _unitOfRepository.Order.Update(order);
                     await _unitOfRepository.CompleteAsync();
-
+                    
+                    var restaurant = await _unitOfRepository.Restaurant.GetById(order.RestaurantId);
+                    
                     /* Todo: Send message to notify for service staff */
-
+                    var serviceStaffIds = await _unitOfRepository.Employee
+                        .Where(x =>
+                            x.Role == RestaurantRole.ServiceStaff
+                            && x.RestaurantId.Equals(order.RestaurantId))
+                        .AsNoTracking()
+                        .Select(x => x.Id)
+                        .ToListAsync(cancellationToken);
+                
+                    /* 1.2. Create message */
+                    var message = new NotifyOrder
+                    {
+                        OrderId = order.Id.ToString(),
+                        OrderStatus = OrderStatus.ReadyToPickup,
+                        RestaurantName = "",
+                        Receivers = serviceStaffIds
+                    };
+                    await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
                     /* Todo: Send message to notify for shipper */
-
+                    
+                    
                     /* Todo: Send message to notify for customer */
+                    var customerId = await _unitOfRepository.Customer
+                        .Where(x =>
+                            x.Id == order.CustomerId)
+                        .AsNoTracking()
+                        .Select(x => x.Id)
+                        .ToListAsync(cancellationToken);
+
+                    var customerMessage = new NotifyOrder
+                    {
+                        OrderId = order.Id.ToString(),
+                        OrderStatus = OrderStatus.ReadyToPickup,
+                        RestaurantName = restaurant.Name,
+                        Receivers = customerId
+                    };
+                    await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
                 }
             }
         }
