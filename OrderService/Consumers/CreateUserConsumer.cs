@@ -63,6 +63,7 @@ public class CreateUserConsumer : IConsumer<CreateSnapshotUser>
                         Name = message.DisplayName,
                         Avatar = message.Avatar,
                         Role = SystemRole.ServiceStaff == message.Role ? RestaurantRole.ServiceStaff : RestaurantRole.Chef,
+                        RestaurantId = message.RestaurantId
                     };
                     await _unitOfRepository.Employee.Add(user);
                     break;

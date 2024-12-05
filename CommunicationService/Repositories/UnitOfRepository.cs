@@ -1,4 +1,5 @@
 ﻿using CommunicationService.Data.Contexts;
+using CommunicationService.Repositories.Implements;
 using CommunicationService.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -14,7 +15,8 @@ public class UnitOfRepository : IUnitOfRepository
     public UnitOfRepository(CommunicationDbContext context)
     {
         _context = context;
-        
+        Notification = new NotificationRepository(context);
+        SignalRConnection = new SignalRConnectionRepository(context);
     }
     
     

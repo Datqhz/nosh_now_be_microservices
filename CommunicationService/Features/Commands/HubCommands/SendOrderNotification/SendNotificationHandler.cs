@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using CommunicationService.Constants;
 using CommunicationService.Hubs;
 using CommunicationService.Hubs.Models;
@@ -51,9 +52,20 @@ public class SendNotificationHandler : IRequestHandler<SendNotificationCommand>
             .AsNoTracking()
             .Select(x => x.ConnectionId)
             .ToListAsync();
+        if (!receivers.Any())
+        {
+            return;
+        }
         var message = new OrderStatusChangeNotification();
         switch (eventData.OrderStatus)
         {
+            case OrderStatus.CheckedOut:
+            {
+                var content = string.Format(OrderNotificationServiceStaffContent.OrderCheckedOut, eventData.OrderId);
+                message.Title = OrderNotificationServiceStaffContent.OrderCheckedOut;
+                message.Content = content;
+                break;
+            }
             case OrderStatus.Preparing:
             {
                 if (eventData.ReceiverType == ReceiverType.Customer)
@@ -61,6 +73,7 @@ public class SendNotificationHandler : IRequestHandler<SendNotificationCommand>
                     message.Content = string.Format(OrderNotificationCustomerContent.OrderPreparing, eventData.OrderId, eventData.RestaurantName);
                     message.Title = OrderNotificationCustomerTitle.OrderPreparing;
                 }
+                
                 var content = string.Format(OrderNotificationChefContent.OrderPreparing, eventData.OrderId);
                 message.Title = OrderNotificationChefTitle.OrderPreparing;
                 message.Content = content;
@@ -72,50 +85,58 @@ public class SendNotificationHandler : IRequestHandler<SendNotificationCommand>
                 message.Title = OrderNotificationCustomerTitle.OrderRejected;
                 break;
             }
-            // case OrderStatus.ReadyToPickup:
-            // {
-            //     var content = OrderNotificationContent.OrderReadyToPickup
-            //         .Replace("{{orderId}}", eventData.OrderId)
-            //         .Replace("{{restaurant}}",eventData.RestaurantName);
-            //     message.Title = OrderNotificationTitle.OrderReadyToPickup;
-            //     message.Content = content;
-            //     break;
-            // }
-            // case OrderStatus.Delivering:
-            // {
-            //     var content = OrderNotificationContent.OrderDelivering
-            //         .Replace("{{orderId}}", eventData.OrderId)
-            //         .Replace("{{restaurant}}",eventData.RestaurantName);
-            //     message.Title = OrderNotificationTitle.OrderDelivering;
-            //     message.Content = content;
-            //     break;
-            // }
-            // case OrderStatus.Arrived:
-            // {
-            //     var content = OrderNotificationContent.OrderArrived
-            //         .Replace("{{orderId}}", eventData.OrderId)
-            //         .Replace("{{restaurant}}",eventData.RestaurantName);
-            //     message.Title = OrderNotificationTitle.OrderArrived;
-            //     message.Content = content;
-            //     break;
-            // }
-            // case OrderStatus.Success:
-            // {
-            //     var content = OrderNotificationContent.DeliverSuccess
-            //         .Replace("{{orderId}}", eventData.OrderId)
-            //         .Replace("{{restaurant}}",eventData.RestaurantName);
-            //     message.Title = OrderNotificationTitle.DeliverSuccess;
-            //     message.Content = content;
-            //     break;
-            // }
-            // case OrderStatus.Failed:
-            // {
-            //     var content = OrderNotificationContent.OrderFailed
-            //         .Replace("{{orderId}}", eventData.OrderId);
-            //     message.Title = OrderNotificationTitle.OrderFailed;
-            //     message.Content = content;
-            //     break;
-            // }
+            case OrderStatus.ReadyToPickup:
+            {
+                if (eventData.ReceiverType == ReceiverType.Customer)
+                {
+                    message.Content = string.Format(OrderNotificationCustomerContent.OrderReadyToPickup, eventData.OrderId, eventData.RestaurantName);
+                    message.Title = OrderNotificationCustomerTitle.OrderReadyToPickup;
+                }
+                
+                var content = string.Format(OrderNotificationServiceStaffContent.OrderReadyToPickup, eventData.OrderId);
+                message.Title = string.Format(OrderNotificationServiceStaffTitle.OrderReadyToPickup, eventData.OrderId);
+                message.Content = content;
+                break;
+            }
+            case OrderStatus.Delivering:
+            {
+                message.Content = string.Format(OrderNotificationCustomerContent.OrderDelivering, eventData.OrderId, eventData.RestaurantName);
+                message.Title = OrderNotificationCustomerTitle.OrderDelivering;
+                break;
+            }
+            case OrderStatus.Arrived:
+            {
+                if (eventData.ReceiverType == ReceiverType.Customer)
+                {
+                    message.Content = string.Format(OrderNotificationCustomerContent.OrderArrived, eventData.OrderId, eventData.RestaurantName);
+                    message.Title = OrderNotificationCustomerTitle.OrderArrived;
+                }
+                
+                var content = string.Format(OrderNotificationServiceStaffContent.OrderArrived, eventData.OrderId);
+                message.Title = OrderNotificationServiceStaffTitle.OrderArrived;
+                message.Content = content;
+                break;
+            }
+            case OrderStatus.Success:
+            {
+                if (eventData.ReceiverType == ReceiverType.Customer)
+                {
+                    message.Content = string.Format(OrderNotificationCustomerContent.DeliverSuccess, eventData.OrderId);
+                    message.Title = OrderNotificationCustomerTitle.DeliverSuccess;
+                }
+                
+                var content = string.Format(OrderNotificationServiceStaffContent.DeliverSuccess, eventData.OrderId);
+                message.Title = OrderNotificationServiceStaffTitle.DeliverSuccess;
+                message.Content = content;
+                break;
+            }
+            case OrderStatus.Failed:
+            {
+                var content = string.Format(OrderNotificationServiceStaffContent.OrderFailed, eventData.OrderId);
+                message.Title = OrderNotificationServiceStaffTitle.OrderFailed;
+                message.Content = content;
+                break;
+            }
             default:
             {
                 break;

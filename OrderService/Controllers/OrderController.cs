@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OrderService.Features.Commands.OrderCommands.AcceptOrder;
 using OrderService.Features.Commands.OrderCommands.CancelOrder;
 using OrderService.Features.Commands.OrderCommands.CheckoutOrder;
 using OrderService.Features.Commands.OrderCommands.GetOrderInitial;
@@ -100,16 +101,25 @@ public class OrderController : ControllerBase
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     
+    [Authorize]
+    [HttpGet("Accept/{orderId}")]
+    public async Task<IActionResult> AcceptOrder(int orderId, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new AcceptOrderCommand(orderId), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+    }
+    
     [HttpGet("Simulation/{orderId}")]
     public async Task<IActionResult> TestSimulation([FromRoute] long orderId, CancellationToken cancellationToken)
     {
+        Console.WriteLine(orderId);
         var order = await _unitOfRepository.Order
             .Where(x => x.Id == orderId && x.Status != OrderStatus.Init && x.Status != OrderStatus.Failed)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
-        Task.Run(async () =>
+        Task.Run(() =>
         {
-            await _shipperSimulation.HandleOrderAsync(order, 12, 12);
+            _shipperSimulation.HandleOrderAsync(order, 12, 12).Wait();
         });
         
         return Ok();

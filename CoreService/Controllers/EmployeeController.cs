@@ -1,6 +1,7 @@
 using CoreService.Features.Commands.EmployeeCommands.DeleteEmployee;
 using CoreService.Features.Commands.EmployeeCommands.UpdateEmployeeProfile;
 using CoreService.Features.Queries.EmployeeQueries.GetEmployeeById;
+using CoreService.Features.Queries.EmployeeQueries.GetEmployeeProfile;
 using CoreService.Features.Queries.EmployeeQueries.GetEmployees;
 using CoreService.Models.Requests;
 using MediatR;
@@ -22,13 +23,22 @@ public class EmployeeController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("{employeeId}/Profile")]
-    public async Task<IActionResult> GetProfile([FromRoute] string employeeId, CancellationToken cancellationToken)
+    [HttpGet("{employeeId}/Information")]
+    public async Task<IActionResult> GetInformation([FromRoute] string employeeId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetEmployeeByIdQuery(employeeId), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode,
             response.Data);
     }
+    
+    [HttpGet("Profile")]
+    public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetEmployeeProfileQuery(), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode,
+            response.Data);
+    }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(string id, CancellationToken cancellationToken)

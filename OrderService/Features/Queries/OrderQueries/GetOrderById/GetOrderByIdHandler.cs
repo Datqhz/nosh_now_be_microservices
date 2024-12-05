@@ -79,7 +79,8 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, GetOrderBy
                         FoodName = food.Name,
                         FoodPrice = food.Price,
                         FoodImage = food.Image,
-                        Amount = od.Amount
+                        Amount = od.Amount,
+                        Status = (int)od.Status
                     }
                 )
                 .AsNoTracking()

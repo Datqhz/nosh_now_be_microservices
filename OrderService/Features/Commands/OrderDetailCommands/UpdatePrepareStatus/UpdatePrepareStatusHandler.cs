@@ -38,7 +38,7 @@ public class UpdatePrepareStatusHandler : IRequestHandler<UpdatePrepareStatusCom
             _logger.LogInformation(functionName);
             var currentUserId = _httpContextAccessor.GetCurrentUserId();
 
-            if (payload.Input.Any())
+            if (!payload.Input.Any())
             {
                 response.StatusCode = (int)ResponseStatusCode.Ok;
                 return response;
@@ -67,6 +67,7 @@ public class UpdatePrepareStatusHandler : IRequestHandler<UpdatePrepareStatusCom
 
             foreach (var input in payload.Input)
             {
+                _logger.LogInformation($"{functionName} detail = {input.OrderDetailId}");
                 var orderDetail = await _unitOfRepository.OrderDetail.GetById(input.OrderDetailId);
                 orderDetail.Status = input.Status;
                 _unitOfRepository.OrderDetail.Update(orderDetail);

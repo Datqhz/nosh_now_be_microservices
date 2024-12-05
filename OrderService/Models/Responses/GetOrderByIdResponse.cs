@@ -33,4 +33,5 @@ public class OrderDetailData
     public string FoodImage { get; set; }
     public decimal FoodPrice { get; set; }
     public int Amount { get; set; }
+    public int Status { get; set; }
 }

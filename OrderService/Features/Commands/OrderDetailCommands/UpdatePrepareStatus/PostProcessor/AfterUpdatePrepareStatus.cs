@@ -4,6 +4,7 @@ using OrderService.Enums;
 using OrderService.Models.Requests;
 using OrderService.Models.Responses;
 using OrderService.Repositories;
+using OrderService.Services;
 using Shared.Enums;
 using Shared.Extensions;
 using Shared.MassTransits.Contracts;
@@ -18,16 +19,19 @@ public class AfterUpdatePrepareStatus : IRequestPostProcessor<UpdatePrepareStatu
     private readonly IUnitOfRepository _unitOfRepository;
     private readonly ILogger<AfterUpdatePrepareStatus> _logger;
     private readonly ISendEndpointCustomProvider _sendEndpoint;
+    private readonly IShipperSimulation _simulation;
     public AfterUpdatePrepareStatus
     (
         IUnitOfRepository unitOfRepository,
         ILogger<AfterUpdatePrepareStatus> logger,
-        ISendEndpointCustomProvider sendEndpoint
+        ISendEndpointCustomProvider sendEndpoint,
+        IShipperSimulation simulation
     )
     {
         _unitOfRepository = unitOfRepository;
         _logger = logger;
         _sendEndpoint = sendEndpoint;
+        _simulation = simulation;
     }
     public async Task Process(UpdatePrepareStatusCommand request, UpdatePrepareStatusResponse response, CancellationToken cancellationToken)
     {
@@ -39,9 +43,10 @@ public class AfterUpdatePrepareStatus : IRequestPostProcessor<UpdatePrepareStatu
             if (response.StatusCode == (int)ResponseStatusCode.Ok)
             {
                 var orderDetails = await _unitOfRepository.OrderDetail
-                    .Where(x => x.OrderId == request.Payload.OrderId && x.Status == PrepareStatus.Done)
+                    .Where(x => x.OrderId == request.Payload.OrderId && x.Status == PrepareStatus.Preparing)
                     .AsNoTracking()
                     .ToListAsync(cancellationToken);
+                
                 if (!orderDetails.Any())
                 {
                     var order = await _unitOfRepository.Order.GetById(request.Payload.OrderId);
@@ -87,7 +92,14 @@ public class AfterUpdatePrepareStatus : IRequestPostProcessor<UpdatePrepareStatu
                         RestaurantName = restaurant.Name,
                         Receivers = customerId
                     };
-                    await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
+                    await _sendEndpoint.SendMessage<NotifyOrder>(customerMessage, ExchangeType.Direct, cancellationToken);
+                    Task.Run(async () =>
+                    {
+                        var random = new Random();
+                        var distance = random.Next(10, 40);
+                        var velocity = random.Next(10, 40);
+                        await _simulation.HandleOrderAsync(order, distance, velocity);
+                    });
                 }
             }
         }

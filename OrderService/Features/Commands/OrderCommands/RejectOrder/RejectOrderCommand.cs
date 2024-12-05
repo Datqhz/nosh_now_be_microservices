@@ -5,7 +5,7 @@ namespace OrderService.Features.Commands.OrderCommands.RejectOrder;
 
 public class RejectOrderCommand : IRequest<RejectOrderResponse>
 {
-    public int OrderId { get; set; }
+    public long OrderId { get; set; }
     public RejectOrderCommand(int orderId)
     {
         OrderId = orderId;
