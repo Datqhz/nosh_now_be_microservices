@@ -33,15 +33,19 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired();
         builder.HasOne(x => x.Customer)
             .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.CustomerId);
+            .HasForeignKey(x => x.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.Restaurant)
             .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.RestaurantId);
+            .HasForeignKey(x => x.RestaurantId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.Shipper)
             .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.ShipperId);
+            .HasForeignKey(x => x.ShipperId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.PaymentMethod)
             .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.PaymentMethodId);
+            .HasForeignKey(x => x.PaymentMethodId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

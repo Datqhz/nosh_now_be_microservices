@@ -20,10 +20,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(x => x.PhoneNumber)
             .IsRequired()
             .HasColumnType("varchar(10)");
-        builder.Property(x => x.BoomCount)
-            .IsRequired()
-            .HasColumnType("int")
-            .HasDefaultValue(0);
         builder.Property(x => x.IsActive)
             .IsRequired()
             .HasDefaultValue(false);

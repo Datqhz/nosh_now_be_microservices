@@ -12,12 +12,13 @@ public interface IUnitOfRepository
     public IFoodRepository Food { get; }
     public IIngredientRepository Ingredient { get; }
     public IRequiredIngredientRepository RequiredIngredient { get; }
-    IRestaurantRepository Restaurant { get; }
-    IShipperRepository Shipper { get; }
-    ICustomerRepository Customer { get; }
-    IOrderRepository Order { get; }
-    IOrderDetailRepository OrderDetail { get; }
-    IPaymentMethodRepository PaymentMethod { get; }
+    public IRestaurantRepository Restaurant { get; }
+    public IShipperRepository Shipper { get; }
+    public ICustomerRepository Customer { get; }
+    public IOrderRepository Order { get; }
+    public IOrderDetailRepository OrderDetail { get; }
+    public IPaymentMethodRepository PaymentMethod { get; }
+    public INoshPointTransactionRepository NoshPointTransaction { get; }
 
     Task CompleteAsync();
     Task<IDbContextTransaction> OpenTransactionAsync();

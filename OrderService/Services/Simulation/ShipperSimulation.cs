@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrderService.Data.Models;
+using OrderService.Models.Requests;
 using OrderService.Repositories;
+using Shared.Constants;
 using Shared.Enums;
 using Shared.MassTransits.Contracts;
 using Shared.MassTransits.Core;
@@ -104,6 +106,7 @@ public class ShipperSimulation : IShipperSimulation
             await sendEndpoint.SendMessage<NotifyOrder>(arrivedMessageSF, ExchangeType.Direct, new CancellationToken());
 
             /* 4. Calculate percent to simulate case: Don't have any customer take the order (timeout)*/
+            var customer = await unitOfRepository.Customer.GetById(order.CustomerId);
             var isReceiveOrder = random.NextDouble() < 0.95;
             if (!isReceiveOrder)
             {
@@ -120,6 +123,10 @@ public class ShipperSimulation : IShipperSimulation
                     Receivers = sfIds
                 };
                 await sendEndpoint.SendMessage<NotifyOrder>(sfMessage, ExchangeType.Direct, new CancellationToken());
+                freeShipper.IsFree = true;
+                unitOfRepository.Shipper.Update(freeShipper);
+                customer.BoomCount += 1;
+                await unitOfRepository.CompleteAsync();
                 return SimulationResult.TimeoutReceiveOrder;
             }
 
@@ -146,6 +153,25 @@ public class ShipperSimulation : IShipperSimulation
             };
             await sendEndpoint.SendMessage<NotifyOrder>(successMessageSF, ExchangeType.Direct, new CancellationToken());
             Console.WriteLine($"Order {order.Id} done");
+            freeShipper.IsFree = true;
+            unitOfRepository.Shipper.Update(freeShipper);
+            var total = await unitOfRepository.OrderDetail
+                .Where(x => x.OrderId == order.Id)
+                .SumAsync(x => x.Amount * x.Price);
+            var totalReceived = total / (decimal)Constants.CustomerBenefit.ReceivePointRatio;
+            var transaction = new NoshPointTransaction
+            {
+                OrderId = order.Id,
+                CustomerId = order.CustomerId,
+                Amount = totalReceived,
+                TransactionType = NoshPointTransactionType.Income,
+                CreatedDate = DateTime.Now
+            };
+            await unitOfRepository.NoshPointTransaction.Add(transaction);
+
+            customer.NoshPoint += totalReceived;
+            unitOfRepository.Customer.Update(customer);
+            await unitOfRepository.CompleteAsync();
             return SimulationResult.Complete;
         }
         catch (Exception ex)

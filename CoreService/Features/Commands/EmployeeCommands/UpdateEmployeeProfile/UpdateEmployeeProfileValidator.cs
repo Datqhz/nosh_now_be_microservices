@@ -1,10 +1,10 @@
-﻿using FluentValidation;
+using FluentValidation;
 
-namespace AuthServer.Features.Commands.AccountCommands.Register;
+namespace CoreService.Features.Commands.EmployeeCommands.UpdateEmployeeProfile;
 
-public class RegisterValidator : AbstractValidator<RegisterCommand>
+public class UpdateEmployeeProfileValidator : AbstractValidator<UpdateEmployeeProfileCommand>
 {
-    public RegisterValidator()
+    public UpdateEmployeeProfileValidator()
     {
         RuleFor(command => command)
             .Cascade(CascadeMode.Stop)
@@ -16,25 +16,25 @@ public class RegisterValidator : AbstractValidator<RegisterCommand>
             .NotNull()
             .NotEmpty()
             .WithMessage("Payload cannot be null or empty.");
-        RuleFor(command => command.Payload.UserName)
+        RuleFor(command => command.Payload.EmployeeId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("UserName cannot be null or empty.");
-        RuleFor(command => command.Payload.Displayname)
+            .WithMessage("EmployeeId cannot be null or empty.");
+        RuleFor(command => command.Payload.DisplayName)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
             .WithMessage("DisplayName cannot be null or empty.");
-        RuleFor(command => command.Payload.Password)
-            .Cascade(CascadeMode.Stop)
-            .NotNull()
-            .NotEmpty()
-            .WithMessage("Password cannot be null or empty.");
         RuleFor(command => command.Payload.PhoneNumber)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
             .WithMessage("PhoneNumber cannot be null or empty.");
+        RuleFor(command => command.Payload.Avatar)
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .NotEmpty()
+            .WithMessage("Avatar cannot be null or empty.");
     }
 }

@@ -25,9 +25,11 @@ public class OrderDetailConfiguration : IEntityTypeConfiguration<OrderDetail>
             .HasDefaultValue(PrepareStatus.Preparing);
         builder.HasOne(x => x.Order)
             .WithMany(x => x.OrderDetails)
-            .HasForeignKey(x => x.OrderId);
+            .HasForeignKey(x => x.OrderId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.Food)
             .WithMany(x => x.OrderDetails)
-            .HasForeignKey(x => x.FoodId);
+            .HasForeignKey(x => x.FoodId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

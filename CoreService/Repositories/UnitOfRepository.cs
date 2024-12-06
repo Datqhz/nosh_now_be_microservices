@@ -28,6 +28,7 @@ public class UnitOfRepository : IUnitOfRepository
         Location = new LocationRepository(context);
         Restaurant = new RestaurantRepository(context);
         Shipper = new ShipperRepository(context);
+        
     }
     
     

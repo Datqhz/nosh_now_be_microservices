@@ -26,9 +26,11 @@ public class FoodConfiguration : IEntityTypeConfiguration<Food>
             .IsRequired();
         builder.HasOne(x => x.Category)
             .WithMany(x => x.Foods)
-            .HasForeignKey(x => x.CategoryId);
+            .HasForeignKey(x => x.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.Restaurant)
             .WithMany(x => x.Foods)
-            .HasForeignKey(x => x.RestaurantId);
+            .HasForeignKey(x => x.RestaurantId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

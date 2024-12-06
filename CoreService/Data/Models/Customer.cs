@@ -14,6 +14,5 @@ public class Customer : IUser
     public string PhoneNumber { get; set; }
     public bool IsActive { get; set; }
     public string Avatar { get; set; }
-    public int BoomCount { get; set; }
     public virtual IEnumerable<Location> Locations { get; set; }
 }

@@ -19,9 +19,11 @@ public class RequiredIngredientConfiguration : IEntityTypeConfiguration<Required
             .IsRequired();
         builder.HasOne(x => x.Food)
             .WithMany(x => x.RequiredIngredients)
-            .HasForeignKey(x => x.FoodId);
+            .HasForeignKey(x => x.FoodId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.Ingredient)
             .WithMany(x => x.RequiredIngredients)
-            .HasForeignKey(x => x.IngredientId);
+            .HasForeignKey(x => x.IngredientId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

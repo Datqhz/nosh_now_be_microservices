@@ -21,6 +21,7 @@ public class CalendarConfiguration : IEntityTypeConfiguration<Calendar>
             .IsRequired();
         builder.HasOne(x => x.Restaurant)
             .WithMany(x => x.Calendars)
-            .HasForeignKey(x => x.RestaurantId);
+            .HasForeignKey(x => x.RestaurantId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

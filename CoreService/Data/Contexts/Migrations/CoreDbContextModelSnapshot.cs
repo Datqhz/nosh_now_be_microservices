@@ -59,18 +59,13 @@ namespace CoreService.Data.Contexts.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("ClosingTime")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OpeningTime")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("RestaurantId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("WorkDate")
+                    b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
@@ -89,11 +84,6 @@ namespace CoreService.Data.Contexts.Migrations
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("BoomCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<string>("DisplayName")
                         .IsRequired()

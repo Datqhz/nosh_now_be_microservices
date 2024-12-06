@@ -31,6 +31,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .IsRequired();
         builder.HasOne(x => x.Restaurant)
             .WithMany(x => x.Employees)
-            .HasForeignKey(x => x.RestaurantId);
+            .HasForeignKey(x => x.RestaurantId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

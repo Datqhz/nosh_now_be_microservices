@@ -26,6 +26,7 @@ public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
             .IsRequired();
         builder.HasOne(x => x.Restaurant)
             .WithMany(x => x.Ingredients)
-            .HasForeignKey(x => x.RestaurantId);
+            .HasForeignKey(x => x.RestaurantId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

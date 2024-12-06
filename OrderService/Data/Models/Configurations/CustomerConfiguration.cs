@@ -15,5 +15,13 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .IsRequired();
         builder.Property(x => x.Avatar)
             .IsRequired();
+        builder.Property(x => x.BoomCount)
+            .IsRequired()
+            .HasColumnType("int")
+            .HasDefaultValue(0);
+        builder.Property(x => x.NoshPoint)
+            .IsRequired()
+            .HasColumnType("decimal")
+            .HasDefaultValue(0);
     }
 }

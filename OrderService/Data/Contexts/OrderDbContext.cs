@@ -17,6 +17,7 @@ public class OrderDbContext : DbContext
     public DbSet<OrderDetail> OrderDetail { get; set; }
     public DbSet<Order> Order { get; set; }
     public DbSet<PaymentMethod> PaymentMethod { get; set; }
+    public DbSet<NoshPointTransaction> NoshPointTransaction { get; set; }
     public OrderDbContext(){}
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options) { }
 
@@ -35,5 +36,6 @@ public class OrderDbContext : DbContext
         modelBuilder.ApplyConfiguration(new PaymentMethodConfiguration());
         modelBuilder.ApplyConfiguration(new RestaurantConfiguration());
         modelBuilder.ApplyConfiguration(new ShipperConfiguration());
+        modelBuilder.ApplyConfiguration(new NoshPointTransactionConfiguration());
     }
 }

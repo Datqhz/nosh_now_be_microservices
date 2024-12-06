@@ -74,7 +74,6 @@ public class CreateUserConsumer : IConsumer<CreateUser>
                         PhoneNumber = message.PhoneNumber,
                         Email = message.Email,
                         Avatar = message.Avatar,
-                        IsActive = true,
                         RestaurantId = new Guid(message.RestaurantId),
                         Role = SystemRole.ServiceStaff == message.Role ? RestaurantRole.ServiceStaff : RestaurantRole.Chef,
                     };

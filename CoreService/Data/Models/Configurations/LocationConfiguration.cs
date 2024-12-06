@@ -23,6 +23,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired();
         builder.HasOne(x => x.Customer)
             .WithMany(u => u.Locations)
-            .HasForeignKey(x => x.CustomerId);
+            .HasForeignKey(x => x.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

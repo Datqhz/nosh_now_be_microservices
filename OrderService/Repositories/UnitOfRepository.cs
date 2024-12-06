@@ -20,6 +20,8 @@ public class UnitOfRepository : IUnitOfRepository
     public IOrderRepository Order { get; }
     public IOrderDetailRepository OrderDetail { get; }
     public IPaymentMethodRepository PaymentMethod { get; }
+    public INoshPointTransactionRepository NoshPointTransaction { get; }
+    
     public UnitOfRepository(OrderDbContext context)
     {
         _context = context;
@@ -35,6 +37,7 @@ public class UnitOfRepository : IUnitOfRepository
         Food = new FoodRepository(context);
         Ingredient = new IngredientRepository(context);
         RequiredIngredient = new RequiredIngredientRepository(context);
+        NoshPointTransaction = new NoshPointTransactionRepository(context);
     }
     
     
