@@ -19,6 +19,8 @@ public interface IUnitOfRepository
     public IOrderDetailRepository OrderDetail { get; }
     public IPaymentMethodRepository PaymentMethod { get; }
     public INoshPointTransactionRepository NoshPointTransaction { get; }
+    public IVoucherRepository Voucher { get; }
+    public IVoucherWalletRepository VoucherWallet { get; }
 
     Task CompleteAsync();
     Task<IDbContextTransaction> OpenTransactionAsync();

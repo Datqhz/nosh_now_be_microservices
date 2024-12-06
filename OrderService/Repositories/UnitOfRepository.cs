@@ -21,6 +21,8 @@ public class UnitOfRepository : IUnitOfRepository
     public IOrderDetailRepository OrderDetail { get; }
     public IPaymentMethodRepository PaymentMethod { get; }
     public INoshPointTransactionRepository NoshPointTransaction { get; }
+    public IVoucherRepository Voucher { get; }
+    public IVoucherWalletRepository VoucherWallet { get; }
     
     public UnitOfRepository(OrderDbContext context)
     {
@@ -38,6 +40,8 @@ public class UnitOfRepository : IUnitOfRepository
         Ingredient = new IngredientRepository(context);
         RequiredIngredient = new RequiredIngredientRepository(context);
         NoshPointTransaction = new NoshPointTransactionRepository(context);
+        Voucher = new VoucherRepository(context);
+        VoucherWallet = new VoucherWalletRepository(context);
     }
     
     
