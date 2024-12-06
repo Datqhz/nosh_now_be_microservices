@@ -43,6 +43,7 @@ public class PrepareOrderHandler : IRequestHandler<PrepareOrderQuery, PrepareOrd
                     where
                         o.Id == orderId
                         && o.Status == OrderStatus.Init
+                        && o.CustomerId == currentUserId
                     select new PrepareOrderData
                     {
                         OrderId = o.Id,
@@ -74,7 +75,15 @@ public class PrepareOrderHandler : IRequestHandler<PrepareOrderQuery, PrepareOrd
                 )
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-            
+            /*var requiredIngredient = 
+            (
+                from od in _unitOfRepository.OrderDetail.GetAll()
+                join i in _unitOfRepository.RequiredIngredient.GetAll()
+                    on od.FoodId equals i.FoodId
+                where od.OrderId == orderId
+                group i by i.IngredientId into g
+                
+            );*/
             var totalPay = orderDetails.Sum(x => x.Amount * x.FoodPrice);
             order.OrderDetails = orderDetails;
             order.Substantial = totalPay;

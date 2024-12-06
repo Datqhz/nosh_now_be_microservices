@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Data.Models;
-using OrderService.Enums;
 using OrderService.Models.Responses;
 using OrderService.Repositories;
 using Shared.Enums;
@@ -31,7 +30,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
     public async Task<CheckoutOrderResponse> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
     {
         var payload = request.Payload;
-        var functionName = $"{nameof(CheckoutOrderHandler)} Payload : {JsonSerializer.Serialize(payload)} =>";
+        var functionName = $"{nameof(CheckoutOrderHandler)} OrderId : {JsonSerializer.Serialize(payload)} =>";
         var response = new CheckoutOrderResponse {StatusCode = (int)ResponseStatusCode.BadRequest};
         await using var transaction = await _unitOfRepository.OpenTransactionAsync();
         
