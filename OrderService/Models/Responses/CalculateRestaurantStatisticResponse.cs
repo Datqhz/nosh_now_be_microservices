@@ -8,8 +8,10 @@ public class CalculateRestaurantStatisticResponse : BaseResponse
 }
 public class CalculateRestaurantStatisticData
 {
-    public int TotalOrder { get; set; } = 0;
+    public int TotalSuccessOrder { get; set; } = 0;
     public decimal TotalRevenue { get; set; } = 0;
+    public int TotalFailedOrder { get; set; } = 0;
+    public int TotalRejectedOrder { get; set; } = 0;
     public List<TopFoodData> TopFoods { get; set; } = new();
 }
 

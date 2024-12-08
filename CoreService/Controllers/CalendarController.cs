@@ -1,5 +1,6 @@
 ﻿using CoreService.Features.Commands.CalendarCommands.AddCalendars;
 using CoreService.Features.Commands.CalendarCommands.DeleteCalendars;
+using CoreService.Features.Queries.CalendarQueries.GetCalendars;
 using CoreService.Models.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,5 +33,12 @@ public class CalendarController : ControllerBase
     {
         var response = await _mediator.Send(new DeleteCalendarsCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+    }
+    
+    [HttpGet("Calendars")]
+    public async Task<IActionResult> GetCalendars([FromQuery] GetCalendarsRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetCalendarsQuery(request), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
 }

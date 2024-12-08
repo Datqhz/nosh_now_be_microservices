@@ -65,7 +65,14 @@ public class AddCalendarsHandler : IRequestHandler<AddCalendarsCommand, AddCalen
             var afterAdd = await _unitOfRepository.Calendar
                 .Where(x => x.RestaurantId.ToString().Equals(currentId))
                 .AsNoTracking()
+                .Select(x => new AddCalendarsData
+                {
+                    Id = x.Id,
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime,
+                })
                 .ToListAsync(cancellationToken);
+            response.Data = afterAdd;
         }
         catch (Exception ex)
         {

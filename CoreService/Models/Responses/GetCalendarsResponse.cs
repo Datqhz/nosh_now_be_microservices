@@ -1,13 +1,13 @@
-using Shared.Responses;
+﻿using Shared.Responses;
 
 namespace CoreService.Models.Responses;
 
-public class AddCalendarsResponse : BaseResponse
+public class GetCalendarsResponse : BaseResponse
 {
-    public List<AddCalendarsData> Data { get; set; }
+    public List<GetCalendarsData> Data { get; set; }
 }
 
-public class AddCalendarsData
+public class GetCalendarsData
 {
     public long Id { get; set; }
     public DateTime StartTime { get; set; }

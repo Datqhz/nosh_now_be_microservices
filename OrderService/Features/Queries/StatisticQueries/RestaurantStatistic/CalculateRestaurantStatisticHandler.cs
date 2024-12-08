@@ -35,26 +35,23 @@ public class CalculateRestaurantStatisticHandler : IRequestHandler<CalculateRest
 
         try
         {
+            
             var currentUserId = _httpContextAccessor.GetCurrentUserId();
             _logger.LogInformation(functionName);
             var orderIds = await _unitOfRepository.Order
-                .Where(x => x.RestaurantId.Equals(currentUserId) && x.Status == OrderStatus.Success)
+                .Where(x => 
+                    x.RestaurantId.Equals(currentUserId) && x.Status == OrderStatus.Success
+                    && x.OrderDate >= payload.FromDate
+                    && x.OrderDate <= payload.ToDate
+                )
                 .AsNoTracking()
                 .Select(x => x.Id)
                 .ToListAsync(cancellationToken);
-
-            if (!orderIds.Any())
-            {
-                response.StatusCode = (int)ResponseStatusCode.Ok;
-                return response;
-            }
-
-            response.Data.TotalOrder = orderIds.Count();
+            
             var totalRevenue = await _unitOfRepository.OrderDetail
                 .Where(x => orderIds.Contains(x.OrderId))
                 .AsNoTracking()
                 .SumAsync(x => x.Amount * x.Price, cancellationToken);
-            response.Data.TotalRevenue = totalRevenue;
 
             var topFoods = await
                 (
@@ -74,7 +71,24 @@ public class CalculateRestaurantStatisticHandler : IRequestHandler<CalculateRest
                 .Take(5)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-            response.Data.TopFoods = topFoods;
+            
+            var totalFailedOrder = await _unitOfRepository.Order
+                .Where(x => x.RestaurantId.Equals(currentUserId) && x.Status == OrderStatus.Failed)
+                .AsNoTracking()
+                .Select(x => x.Id)
+                .CountAsync(cancellationToken);
+            var totalOrderRejected = await _unitOfRepository.Order
+                .Where(x => x.RestaurantId.Equals(currentUserId) && x.Status == OrderStatus.Rejected)
+                .AsNoTracking()
+                .CountAsync(cancellationToken);
+            response.Data = new CalculateRestaurantStatisticData
+            {
+                TotalRevenue = totalRevenue,
+                TopFoods = topFoods,
+                TotalRejectedOrder = totalOrderRejected,
+                TotalFailedOrder = totalFailedOrder,
+                TotalSuccessOrder = orderIds.Count(),
+            };
             response.StatusCode = (int)ResponseStatusCode.Ok;
         }
         catch (Exception ex)
