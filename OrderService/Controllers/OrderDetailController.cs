@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Data.Models;
-using OrderService.Features.Commands.OrderDetailCommands.CreateOrderDetail;
+using OrderService.Features.Commands.OrderDetailCommands.AddOrderDetail;
 using OrderService.Features.Commands.OrderDetailCommands.DeleteOrderDetail;
 using OrderService.Features.Commands.OrderDetailCommands.UpdateOrderDetail;
 using OrderService.Features.Commands.OrderDetailCommands.UpdatePrepareStatus;
@@ -26,9 +26,9 @@ public class OrderDetailController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateOrderDetail([FromBody] CreateOrderDetailRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateOrderDetail([FromBody] AddOrderDetailRequest request, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new CreateOrderDetailCommand(request), cancellationToken);
+        var response = await _mediator.Send(new AddOrderDetailCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
 

@@ -7,17 +7,17 @@ using Shared.Extensions;
 using Shared.HttpContextAccessor;
 using Shared.Responses;
 
-namespace OrderService.Features.Commands.IngredientCommands.CreateIngredient;
+namespace OrderService.Features.Commands.IngredientCommands.AddIngredient;
 
-public class CreateIngredientHandler : IRequestHandler<CreateIngredientCommand, CreateIngredientResponse>
+public class AddIngredientHandler : IRequestHandler<AddIngredientCommand, CreateIngredientResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<CreateIngredientHandler> _logger;
+    private readonly ILogger<AddIngredientHandler> _logger;
     private readonly ICustomHttpContextAccessor _httpContextAccessor;
-    public CreateIngredientHandler
+    public AddIngredientHandler
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<CreateIngredientHandler> logger,
+        ILogger<AddIngredientHandler> logger,
         ICustomHttpContextAccessor httpContextAccessor
     )
     {
@@ -26,10 +26,10 @@ public class CreateIngredientHandler : IRequestHandler<CreateIngredientCommand, 
         _httpContextAccessor = httpContextAccessor;
     }
     
-    public async Task<CreateIngredientResponse> Handle(CreateIngredientCommand request, CancellationToken cancellationToken)
+    public async Task<CreateIngredientResponse> Handle(AddIngredientCommand request, CancellationToken cancellationToken)
     {
         var payload = request.Payload;
-        var functionName = $"{nameof(CreateIngredientHandler)} Payload : {JsonSerializer.Serialize(payload)} =>";
+        var functionName = $"{nameof(AddIngredientHandler)} Payload : {JsonSerializer.Serialize(payload)} =>";
         var response = new CreateIngredientResponse {StatusCode = (int)ResponseStatusCode.BadRequest};
 
         try

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Features.Commands.CategoryCommands.CreateCategory;
+using OrderService.Features.Commands.CategoryCommands.AddCategory;
 using OrderService.Features.Commands.CategoryCommands.UpdateCategory;
 using OrderService.Features.Queries.CategoryQueries.GetCategories;
 using OrderService.Models.Requests;
@@ -29,9 +29,9 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddCategory([FromBody] CreateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddCategory([FromBody] AddCategoryRequest request, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new CreateCategoryCommand(request), cancellationToken);
+        var response = await _mediator.Send(new AddCategoryCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     

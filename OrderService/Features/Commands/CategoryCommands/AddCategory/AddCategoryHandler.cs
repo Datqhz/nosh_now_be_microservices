@@ -7,17 +7,17 @@ using Shared.Extensions;
 using Shared.HttpContextAccessor;
 using Shared.Responses;
 
-namespace OrderService.Features.Commands.CategoryCommands.CreateCategory;
+namespace OrderService.Features.Commands.CategoryCommands.AddCategory;
 
-public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, CreateCategoryResponse>
+public class AddCategoryHandler : IRequestHandler<AddCategoryCommand, CreateCategoryResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<CreateCategoryHandler> _logger;
+    private readonly ILogger<AddCategoryHandler> _logger;
     private readonly ICustomHttpContextAccessor _httpContextAccessor;
-    public CreateCategoryHandler
+    public AddCategoryHandler
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<CreateCategoryHandler> logger,
+        ILogger<AddCategoryHandler> logger,
         ICustomHttpContextAccessor httpContextAccessor
     )
     {
@@ -26,10 +26,10 @@ public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Crea
         _httpContextAccessor = httpContextAccessor;
     }
     
-    public async Task<CreateCategoryResponse> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<CreateCategoryResponse> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
     {
         var payload = request.Payload;
-        var functionName = $"{nameof(CreateCategoryHandler)} Payload = {JsonSerializer.Serialize(payload)} =>";
+        var functionName = $"{nameof(AddCategoryHandler)} Payload = {JsonSerializer.Serialize(payload)} =>";
         var response = new CreateCategoryResponse {StatusCode = (int)ResponseStatusCode.InternalServerError};
 
         try

@@ -7,17 +7,17 @@ using Shared.Extensions;
 using Shared.HttpContextAccessor;
 using Shared.Responses;
 
-namespace OrderService.Features.Commands.FoodCommands.CreateFood;
+namespace OrderService.Features.Commands.FoodCommands.AddFood;
 
-public class CreateFoodHandler : IRequestHandler<CreateFoodCommand, CreateFoodResponse>
+public class AddFoodHandler : IRequestHandler<AddFoodCommand, CreateFoodResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<CreateFoodHandler> _logger;
+    private readonly ILogger<AddFoodHandler> _logger;
     private readonly ICustomHttpContextAccessor _httpContextAccessor;
-    public CreateFoodHandler
+    public AddFoodHandler
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<CreateFoodHandler> logger,
+        ILogger<AddFoodHandler> logger,
         ICustomHttpContextAccessor httpContextAccessor
     )
     {
@@ -26,10 +26,10 @@ public class CreateFoodHandler : IRequestHandler<CreateFoodCommand, CreateFoodRe
         _httpContextAccessor = httpContextAccessor;
     }
     
-    public async Task<CreateFoodResponse> Handle(CreateFoodCommand request, CancellationToken cancellationToken)
+    public async Task<CreateFoodResponse> Handle(AddFoodCommand request, CancellationToken cancellationToken)
     {
         var payload = request.Payload;
-        var functionName = $"{nameof(CreateFoodHandler)} Payload = {JsonSerializer.Serialize(payload)} =>";
+        var functionName = $"{nameof(AddFoodHandler)} Payload = {JsonSerializer.Serialize(payload)} =>";
         var response = new CreateFoodResponse {StatusCode = (int)ResponseStatusCode.InternalServerError};
 
         try

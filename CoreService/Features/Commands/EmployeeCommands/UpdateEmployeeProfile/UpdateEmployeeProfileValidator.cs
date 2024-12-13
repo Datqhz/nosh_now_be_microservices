@@ -10,31 +10,38 @@ public class UpdateEmployeeProfileValidator : AbstractValidator<UpdateEmployeePr
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("command cannot be null or empty.");
+            .WithMessage("command is required");
+        
         RuleFor(command => command.Payload)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("Payload cannot be null or empty.");
+            .WithMessage("Payload is required");
+        
         RuleFor(command => command.Payload.EmployeeId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("EmployeeId cannot be null or empty.");
+            .WithMessage("EmployeeId is required");
+        
         RuleFor(command => command.Payload.DisplayName)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("DisplayName cannot be null or empty.");
+            .WithMessage("Display name is required")
+            .MaximumLength(100)
+            .WithMessage("Display name cannot be longer than 100 characters");
+        
         RuleFor(command => command.Payload.PhoneNumber)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("PhoneNumber cannot be null or empty.");
+            .WithMessage("Phone number is required");
+        
         RuleFor(command => command.Payload.Avatar)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("Avatar cannot be null or empty.");
+            .WithMessage("Avatar is required");
     }
 }

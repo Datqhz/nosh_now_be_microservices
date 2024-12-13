@@ -10,17 +10,17 @@ using Shared.Extensions;
 using Shared.HttpContextAccessor;
 using Shared.Responses;
 
-namespace OrderService.Features.Commands.OrderDetailCommands.CreateOrderDetail;
+namespace OrderService.Features.Commands.OrderDetailCommands.AddOrderDetail;
 
-public class CreateOrderDetailHandler : IRequestHandler<CreateOrderDetailCommand, CreateOrderDetailResponse>
+public class AddOrderDetailHandler : IRequestHandler<AddOrderDetailCommand, CreateOrderDetailResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<CreateOrderDetailHandler> _logger;
+    private readonly ILogger<AddOrderDetailHandler> _logger;
     private readonly ICustomHttpContextAccessor _httpContextAccessor;
-    public CreateOrderDetailHandler
+    public AddOrderDetailHandler
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<CreateOrderDetailHandler> logger,
+        ILogger<AddOrderDetailHandler> logger,
         ICustomHttpContextAccessor httpContextAccessor
     )
     {
@@ -28,10 +28,10 @@ public class CreateOrderDetailHandler : IRequestHandler<CreateOrderDetailCommand
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
     }
-    public async Task<CreateOrderDetailResponse> Handle(CreateOrderDetailCommand request, CancellationToken cancellationToken)
+    public async Task<CreateOrderDetailResponse> Handle(AddOrderDetailCommand request, CancellationToken cancellationToken)
     {
         var payload = request.Payload;
-        var functionName = $"{nameof(CreateOrderDetailHandler)} Payload : {JsonSerializer.Serialize(payload)} =>";
+        var functionName = $"{nameof(AddOrderDetailHandler)} Payload : {JsonSerializer.Serialize(payload)} =>";
         var response = new CreateOrderDetailResponse {StatusCode = (int)ResponseStatusCode.BadRequest};
 
         try

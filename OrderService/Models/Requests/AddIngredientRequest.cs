@@ -2,7 +2,7 @@
 
 namespace OrderService.Models.Requests;
 
-public class CreateIngredientRequest
+public class AddIngredientRequest
 {
     public string IngredientName { get; set; }
     public double Quantity { get; set; }

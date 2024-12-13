@@ -1,6 +1,6 @@
 ﻿namespace OrderService.Models.Requests;
 
-public class CreateFoodRequest
+public class AddFoodRequest
 {
     public string FoodName { get; set; }
     public string FoodDescription { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace OrderService.Models.Requests;
 
-public class CreateOrderDetailRequest
+public class AddOrderDetailRequest
 {
     public long OrderId { get; set; }
     public int FoodId { get; set; }

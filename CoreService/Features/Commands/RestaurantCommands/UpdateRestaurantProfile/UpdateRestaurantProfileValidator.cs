@@ -1,17 +1,17 @@
 using FluentValidation;
 using Shared.Constants;
 
-namespace CoreService.Features.Commands.CustomerCommands.UpdateCustomerProfile;
+namespace CoreService.Features.Commands.RestaurantCommands.UpdateRestaurantProfile;
 
-public class UpdateCustomerProfileValidator : AbstractValidator<UpdateCustomerProfileCommand>
+public class UpdateRestaurantProfileValidator : AbstractValidator<UpdateRestaurantProfileCommand>
 {
-    public UpdateCustomerProfileValidator()
+    public UpdateRestaurantProfileValidator()
     {
         RuleFor(command => command)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("command is required");
+            .WithMessage("Command is required");
         
         RuleFor(command => command.Payload)
             .Cascade(CascadeMode.Stop)
@@ -23,7 +23,7 @@ public class UpdateCustomerProfileValidator : AbstractValidator<UpdateCustomerPr
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("DisplayName is required")
+            .WithMessage("Display name is required")
             .MaximumLength(100)
             .WithMessage("Display name no longer than 100 characters");
         
@@ -31,14 +31,20 @@ public class UpdateCustomerProfileValidator : AbstractValidator<UpdateCustomerPr
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("PhoneNumber cannot be null or empty.")
+            .WithMessage("Phone number is required")
             .Matches(Common.ValidPhoneRegex)
-            .WithMessage("Phone is invalid");
+            .WithMessage("Phone number is invalid");
+
+        RuleFor(command => command.Payload.Coordinate)
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .NotEmpty()
+            .WithMessage("Coordinate is required");
         
         RuleFor(command => command.Payload.Avatar)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .NotEmpty()
-            .WithMessage("Avatar cannot be null or empty.");
+            .WithMessage("Avatar is required");
     }
 }

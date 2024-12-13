@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Features.Commands.IngredientCommands.CreateIngredient;
+using OrderService.Features.Commands.IngredientCommands.AddIngredient;
 using OrderService.Features.Commands.IngredientCommands.DeleteIngredient;
 using OrderService.Features.Commands.IngredientCommands.UpdateIngredient;
 using OrderService.Features.Queries.IngredientQueries.GetIngredients;
@@ -30,9 +30,9 @@ public class IngredientController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddIngredient([FromBody] CreateIngredientRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddIngredient([FromBody] AddIngredientRequest request, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new CreateIngredientCommand(request), cancellationToken);
+        var response = await _mediator.Send(new AddIngredientCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     

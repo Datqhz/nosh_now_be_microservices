@@ -6,17 +6,17 @@ using Shared.Extensions;
 using Shared.HttpContextAccessor;
 using Shared.Responses;
 
-namespace OrderService.Features.Commands.VoucherCommands.CreateVoucher;
+namespace OrderService.Features.Commands.VoucherCommands.AddVoucher;
 
-public class CreateVoucherHandler : IRequestHandler<CreateVoucherCommand, CreateVoucherResponse>
+public class AddVoucherHandler : IRequestHandler<AddVoucherCommand, CreateVoucherResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<CreateVoucherHandler> _logger;
+    private readonly ILogger<AddVoucherHandler> _logger;
     private readonly ICustomHttpContextAccessor _httpContextAccessor;
-    public CreateVoucherHandler
+    public AddVoucherHandler
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<CreateVoucherHandler> logger,
+        ILogger<AddVoucherHandler> logger,
         ICustomHttpContextAccessor httpContextAccessor
     )
     {
@@ -24,10 +24,10 @@ public class CreateVoucherHandler : IRequestHandler<CreateVoucherCommand, Create
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
     }
-    public async Task<CreateVoucherResponse> Handle(CreateVoucherCommand request, CancellationToken cancellationToken)
+    public async Task<CreateVoucherResponse> Handle(AddVoucherCommand request, CancellationToken cancellationToken)
     {
         var payload = request.Payload;
-        var functionName = $"{nameof(CreateVoucherHandler)} =>";
+        var functionName = $"{nameof(AddVoucherHandler)} =>";
         _logger.LogInformation(functionName);
         var response = new CreateVoucherResponse { StatusCode = (int)ResponseStatusCode.Ok };
 

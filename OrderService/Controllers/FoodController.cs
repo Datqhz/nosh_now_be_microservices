@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Features.Commands;
 using OrderService.Features.Commands.CategoryCommands.UpdateCategory;
-using OrderService.Features.Commands.FoodCommands.CreateFood;
+using OrderService.Features.Commands.FoodCommands.AddFood;
 using OrderService.Features.Commands.FoodCommands.DeleteFood;
 using OrderService.Features.Commands.FoodCommands.UpdateFood;
 using OrderService.Features.Queries.FoodQueries.GetFoodById;
@@ -50,9 +50,9 @@ public class FoodController : BaseResponse
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddFood([FromBody] CreateFoodRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddFood([FromBody] AddFoodRequest request, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new CreateFoodCommand(request), cancellationToken);
+        var response = await _mediator.Send(new AddFoodCommand(request), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     

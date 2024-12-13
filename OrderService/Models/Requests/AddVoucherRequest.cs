@@ -1,6 +1,6 @@
 namespace OrderService.Models.Requests;
 
-public class CreateVoucherRequest
+public class AddVoucherRequest
 {
     public string VoucherName { get; set; }
     public decimal Amount { get; set; }
