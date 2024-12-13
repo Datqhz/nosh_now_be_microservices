@@ -4,6 +4,7 @@ using CoreService.Features.Queries.EmployeeQueries.GetEmployeeById;
 using CoreService.Features.Queries.EmployeeQueries.GetEmployeeProfile;
 using CoreService.Features.Queries.EmployeeQueries.GetEmployees;
 using CoreService.Models.Requests;
+using CoreService.Models.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Responses;
@@ -24,6 +25,7 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet("{employeeId}/Information")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetEmployeeByIdResponse))]
     public async Task<IActionResult> GetInformation([FromRoute] string employeeId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetEmployeeByIdQuery(employeeId), cancellationToken);
@@ -32,6 +34,7 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet("Profile")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetEmployeeProfileResponse))]
     public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetEmployeeProfileQuery(), cancellationToken);
@@ -41,6 +44,7 @@ public class EmployeeController : ControllerBase
 
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DeleteEmployeeResponse))]
     public async Task<IActionResult> DeleteEmployee(string id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new DeleteEmployeeCommand(id), cancellationToken);
@@ -48,6 +52,7 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpPost("Employees")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetEmployeesResponse))]
     public async Task<IActionResult> GetEmployees([FromBody] GetEmployeesRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetEmployeesQuery(request), cancellationToken);
@@ -55,6 +60,7 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateEmployeeProfileResponse))]
     public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeProfileRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateEmployeeProfileCommand(request), cancellationToken);

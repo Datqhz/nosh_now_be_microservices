@@ -5,5 +5,5 @@ namespace CoreService.Models.Responses;
 
 public class UpdateEmployeeProfileResponse : BaseResponse
 {
-    public SystemRole PostProcessorData { get; set; }
+    internal SystemRole PostProcessorData { get; set; }
 }

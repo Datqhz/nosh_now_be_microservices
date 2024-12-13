@@ -1,4 +1,6 @@
-﻿namespace CommunicationService.Data.Models;
+﻿using Shared.Enums;
+
+namespace CommunicationService.Data.Models;
 
 public class Notification
 {
@@ -6,5 +8,5 @@ public class Notification
     public string Title { get; set; }
     public string Content { get; set; }
     public string UserId { get; set; }
-    public string NotifyType { get; set; }
+    public ReceiverType ReceiverType { get; set; }
 }

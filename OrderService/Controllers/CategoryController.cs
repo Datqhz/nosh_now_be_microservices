@@ -4,6 +4,7 @@ using OrderService.Features.Commands.CategoryCommands.AddCategory;
 using OrderService.Features.Commands.CategoryCommands.UpdateCategory;
 using OrderService.Features.Queries.CategoryQueries.GetCategories;
 using OrderService.Models.Requests;
+using OrderService.Models.Responses;
 using Shared.Responses;
 
 namespace OrderService.Controllers;
@@ -22,6 +23,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("Categories")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetCategoriesResponse))]
     public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetCategoriesQuery(), cancellationToken);
@@ -29,6 +31,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreateCategoryResponse))]
     public async Task<IActionResult> AddCategory([FromBody] AddCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AddCategoryCommand(request), cancellationToken);
@@ -36,6 +39,7 @@ public class CategoryController : ControllerBase
     }
     
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateCategoryResponse))]
     public async Task<IActionResult>UpdateCategory([FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateCategoryCommand(request), cancellationToken);

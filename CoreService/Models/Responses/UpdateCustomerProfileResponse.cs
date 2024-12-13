@@ -4,7 +4,7 @@ namespace CoreService.Models.Responses;
 
 public class UpdateCustomerProfileResponse : BaseResponse
 {
-    public UpdateCustomerProfilePostProcessorData PostProcessorData { get; set; }
+    internal UpdateCustomerProfilePostProcessorData PostProcessorData { get; set; }
 }
 
 public class UpdateCustomerProfilePostProcessorData

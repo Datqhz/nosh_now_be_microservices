@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Features.Queries.RestaurantQueries.GetRestaurants;
 using OrderService.Models.Requests;
+using OrderService.Models.Responses;
 using Shared.Responses;
 
 namespace OrderService.Controllers;
@@ -20,6 +21,7 @@ public class RestaurantController: ControllerBase
     }
     
     [HttpPost("ByCategory")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetRestaurantsByCategoryResponse))]
     public async Task<IActionResult> GetFoodsByRestaurant([FromBody] GetRestaurantsByCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetRestaurantsByCategoryQuery(request), cancellationToken);

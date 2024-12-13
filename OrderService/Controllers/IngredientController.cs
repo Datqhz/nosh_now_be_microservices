@@ -5,6 +5,7 @@ using OrderService.Features.Commands.IngredientCommands.DeleteIngredient;
 using OrderService.Features.Commands.IngredientCommands.UpdateIngredient;
 using OrderService.Features.Queries.IngredientQueries.GetIngredients;
 using OrderService.Models.Requests;
+using OrderService.Models.Responses;
 using Shared.Responses;
 
 namespace OrderService.Controllers;
@@ -23,6 +24,7 @@ public class IngredientController : ControllerBase
     }
     
     [HttpGet("Ingredients")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetIngredientsResponse))]
     public async Task<IActionResult> GetIngredients(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetIngredientsQuery(), cancellationToken);
@@ -30,6 +32,7 @@ public class IngredientController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreateIngredientResponse))]
     public async Task<IActionResult> AddIngredient([FromBody] AddIngredientRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AddIngredientCommand(request), cancellationToken);
@@ -37,6 +40,7 @@ public class IngredientController : ControllerBase
     }
     
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateIngredientResponse))]
     public async Task<IActionResult>UpdateIngredient([FromBody] UpdateIngredientRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateIngredientCommand(request), cancellationToken);
@@ -44,6 +48,7 @@ public class IngredientController : ControllerBase
     }
     
     [HttpDelete("{ingredientId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DeleteIngredientResponse))]
     public async Task<IActionResult> DeleteIngredient(int ingredientId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new DeleteIngredientCommand(ingredientId), cancellationToken);

@@ -4,5 +4,6 @@ public enum ReceiverType
 {
     Customer,
     ServiceStaff,
-    Chef
+    Chef,
+    Restaurant
 }

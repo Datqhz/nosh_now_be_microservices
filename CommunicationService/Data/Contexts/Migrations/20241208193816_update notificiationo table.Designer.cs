@@ -2,6 +2,7 @@
 using CommunicationService.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CommunicationService.Data.Contexts.Migrations
 {
     [DbContext(typeof(CommunicationDbContext))]
-    partial class CommunicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241208193816_update notificiationo table")]
+    partial class updatenotificiationotable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -7,6 +7,7 @@ using OrderService.Features.Commands.OrderDetailCommands.DeleteOrderDetail;
 using OrderService.Features.Commands.OrderDetailCommands.UpdateOrderDetail;
 using OrderService.Features.Commands.OrderDetailCommands.UpdatePrepareStatus;
 using OrderService.Models.Requests;
+using OrderService.Models.Responses;
 using Shared.Responses;
 
 namespace OrderService.Controllers;
@@ -26,6 +27,7 @@ public class OrderDetailController : ControllerBase
     }
     
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreateOrderDetailResponse))]
     public async Task<IActionResult> CreateOrderDetail([FromBody] AddOrderDetailRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AddOrderDetailCommand(request), cancellationToken);
@@ -33,6 +35,7 @@ public class OrderDetailController : ControllerBase
     }
 
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateOrderDetailResponse))]
     public async Task<IActionResult> UpdateOrderDetail([FromBody] UpdateOrderDetailRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateOrderDetailCommand(request), cancellationToken);
@@ -40,6 +43,7 @@ public class OrderDetailController : ControllerBase
     }
     
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DeleteOrderDetailResponse))]
     public async Task<IActionResult> DeleteOrderDetail([FromRoute] long id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new DeleteOrderDetailCommand(id), cancellationToken);
@@ -47,6 +51,7 @@ public class OrderDetailController : ControllerBase
     }
     
     [HttpPut("PrepareStatus")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdatePrepareStatusResponse))]
     public async Task<IActionResult> UpdatePrepareStatus([FromBody] UpdatePrepareStatusRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdatePrepareStatusCommand(request), cancellationToken);

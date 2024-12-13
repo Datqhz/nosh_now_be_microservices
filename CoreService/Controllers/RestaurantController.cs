@@ -2,6 +2,7 @@
 using CoreService.Features.Queries.RestaurantQueries.GetRestaurantProfile;
 using CoreService.Features.Queries.RestaurantQueries.GetRestaurants;
 using CoreService.Models.Requests;
+using CoreService.Models.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Responses;
@@ -22,6 +23,7 @@ public class RestaurantController : ControllerBase
     }
 
     [HttpGet("Profile")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetRestaurantProfileResponse))]
     public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetRestaurantProfileQuery(), cancellationToken);
@@ -30,6 +32,7 @@ public class RestaurantController : ControllerBase
     }
 
     [HttpPut("UpdateProfile")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateRestaurantProfileResponse))]
     public async Task<IActionResult> UpdateProfile(UpdateRestaurantProfileRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateRestaurantProfileCommand(request), cancellationToken);
@@ -37,6 +40,7 @@ public class RestaurantController : ControllerBase
     }
     
     [HttpPost("Restaurants")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetRestaurantsResponse))]
     public async Task<IActionResult> GetRestaurantNearBy([FromBody] GetRestaurantsRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetRestaurantsQuery(request), cancellationToken);

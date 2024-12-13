@@ -171,7 +171,6 @@ public static class ServiceExtensions
     {
         services.AddSignalR(options =>
             {
-                options.KeepAliveInterval = TimeSpan.FromDays(365); 
                 options.EnableDetailedErrors = true;
             })
             .AddMessagePackProtocol();

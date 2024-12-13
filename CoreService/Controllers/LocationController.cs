@@ -4,6 +4,7 @@ using CoreService.Features.Commands.LocationCommands.UpdateLocation;
 using CoreService.Features.Queries.RestaurantQueries.GetRestaurants;
 using CoreService.Features.Queries.SavedLocationQueries.GetSavedLocationByCustomer;
 using CoreService.Models.Requests;
+using CoreService.Models.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Responses;
@@ -24,6 +25,7 @@ public class LocationController : ControllerBase
     }
 
     [HttpGet("SavedLocations")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetSavedLocationByCustomerResponse))]
     public async Task<IActionResult> GetSavedLocations(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetSavedLocationByCustomerQuery(), cancellationToken);
@@ -32,6 +34,7 @@ public class LocationController : ControllerBase
     }
     
     [HttpPost("Saved")]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateLocationResponse))]
     public async Task<IActionResult> SaveNewLocation([FromBody] CreateLocationRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new CreateLocationCommand(request), cancellationToken);
@@ -39,6 +42,7 @@ public class LocationController : ControllerBase
     }
 
     [HttpPut("Update")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateLocationResponse))]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateLocationRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateLocationCommand(request), cancellationToken);

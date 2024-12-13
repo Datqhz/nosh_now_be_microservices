@@ -18,7 +18,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
             .IsRequired();
         builder.Property(x => x.UserId)
             .IsRequired();
-        builder.Property(x => x.NotifyType)
+        builder.Property(x => x.ReceiverType)
             .IsRequired();
     }
 }

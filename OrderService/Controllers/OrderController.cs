@@ -12,6 +12,7 @@ using OrderService.Features.Queries.OrderQueries.PrepareOrder;
 using OrderService.Features.Queries.OrderQueries.GetOrderByStatusEmployee;
 using OrderService.Features.Queries.OrderQueries.GetOrdersByStatus;
 using OrderService.Models.Requests;
+using OrderService.Models.Responses;
 using OrderService.Repositories;
 using OrderService.Services;
 using Shared.Enums;
@@ -41,6 +42,7 @@ public class OrderController : ControllerBase
 
     [Authorize]
     [HttpGet("GetByStatus")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetOrderByStatusResponse))]
     public async Task<IActionResult> GetByStatus([FromQuery] GetOrderByStatusRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOrderByStatusQuery(request), cancellationToken);
@@ -49,6 +51,7 @@ public class OrderController : ControllerBase
     
     [Authorize]
     [HttpGet("Employee-GetByStatus")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetOrderByStatusEmployeeResponse))]
     public async Task<IActionResult> GetByStatusForEmployee([FromQuery] OrderStatus status, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOrderByStatusEmployeeQuery(status), cancellationToken);
@@ -57,6 +60,7 @@ public class OrderController : ControllerBase
     
     [Authorize]
     [HttpGet("GetOrderInit/{restaurantId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetOrderInitialResponse))]
     public async Task<IActionResult> GetOrderInit([FromRoute] string restaurantId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOrderInitialCommand(restaurantId), cancellationToken);
@@ -64,6 +68,7 @@ public class OrderController : ControllerBase
     }
     
     [HttpGet("PrepareOrder/{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PrepareOrderResponse))]
     public async Task<IActionResult> GetOrderInitById([FromRoute] long orderId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new PrepareOrderQuery(orderId), cancellationToken);
@@ -71,6 +76,7 @@ public class OrderController : ControllerBase
     }
     
     [HttpGet("{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetOrderByIdResponse))]
     public async Task<IActionResult> GetOrderById([FromRoute] long orderId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOrderByIdQuery(orderId), cancellationToken);
@@ -79,6 +85,7 @@ public class OrderController : ControllerBase
     
     [Authorize]
     [HttpPost("Checkout")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CheckoutOrderResponse))]
     public async Task<IActionResult> CheckoutOrder([FromBody] CheckoutOrderRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new CheckoutOrderCommand(request), cancellationToken);
@@ -87,6 +94,7 @@ public class OrderController : ControllerBase
     
     [Authorize]
     [HttpGet("Cancel/{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CancelOrderResponse))]
     public async Task<IActionResult> CancelOrder(int orderId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new CancelOrderCommand(orderId), cancellationToken);
@@ -95,6 +103,7 @@ public class OrderController : ControllerBase
     
     [Authorize]
     [HttpGet("Reject/{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RejectOrderResponse))]
     public async Task<IActionResult> RejectOrder(int orderId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new RejectOrderCommand(orderId), cancellationToken);
@@ -103,6 +112,7 @@ public class OrderController : ControllerBase
     
     [Authorize]
     [HttpGet("Accept/{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AcceptOrderResponse))]
     public async Task<IActionResult> AcceptOrder(int orderId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AcceptOrderCommand(orderId), cancellationToken);

@@ -11,6 +11,7 @@ using OrderService.Features.Queries.FoodQueries.GetFoodById;
 using OrderService.Features.Queries.FoodQueries.GetFoods;
 using OrderService.Features.Queries.FoodQueries.GetFoodsByRestaurant;
 using OrderService.Models.Requests;
+using OrderService.Models.Responses;
 using Shared.Responses;
 
 namespace OrderService.Controllers;
@@ -29,6 +30,7 @@ public class FoodController : BaseResponse
     }
     
     [HttpGet("Foods/{restaurantId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetFoodsByRestaurantResponse))]
     public async Task<IActionResult> GetFoodsByRestaurant(string restaurantId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetFoodsByRestaurantQuery(restaurantId), cancellationToken);
@@ -36,6 +38,7 @@ public class FoodController : BaseResponse
     }
     
     [HttpGet("Foods")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetFoodsResponse))]
     public async Task<IActionResult> GetFoodsByRestaurant([FromQuery] GetFoodsRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetFoodsQuery(request), cancellationToken);
@@ -43,6 +46,7 @@ public class FoodController : BaseResponse
     }
     
     [HttpGet("{foodId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetFoodByIdResponse))]
     public async Task<IActionResult> GetFoodById(int foodId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetFoodByIdQuery(foodId), cancellationToken);
@@ -50,6 +54,7 @@ public class FoodController : BaseResponse
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreateFoodResponse))]
     public async Task<IActionResult> AddFood([FromBody] AddFoodRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AddFoodCommand(request), cancellationToken);
@@ -57,6 +62,7 @@ public class FoodController : BaseResponse
     }
     
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateFoodResponse))]
     public async Task<IActionResult>UpdateFood([FromBody] UpdateFoodRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateFoodCommand(request), cancellationToken);
@@ -64,6 +70,7 @@ public class FoodController : BaseResponse
     }
     
     [HttpDelete("{foodId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DeleteFoodResponse))]
     public async Task<IActionResult> DeleteFood(int foodId, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new DeleteFoodCommand(foodId), cancellationToken);

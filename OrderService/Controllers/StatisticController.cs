@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderService.Features.Queries.RestaurantQueries.GetOverview;
 using OrderService.Features.Queries.StatisticQueries.RestaurantStatistic;
 using OrderService.Models.Requests;
+using OrderService.Models.Responses;
 using Shared.Responses;
 
 namespace OrderService.Controllers;
@@ -21,6 +22,7 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet("GetStatistics")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CalculateRestaurantStatisticResponse))]
     public async Task<IActionResult> GetStatistics([FromQuery] CalculateRestaurantStatisticRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new CalculateRestaurantStatisticQuery(request), cancellationToken);
@@ -29,6 +31,7 @@ public class StatisticController : ControllerBase
     }
     
     [HttpGet("Overview")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetRestaurantOverviewResponse))]
     public async Task<IActionResult> GetFoodsByRestaurant([FromQuery] DateTime date, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetOverviewQuery(date), cancellationToken);

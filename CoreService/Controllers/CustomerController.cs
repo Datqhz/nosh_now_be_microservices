@@ -2,6 +2,7 @@
 using CoreService.Features.Commands.CustomerCommands.UpdateCustomerProfile;
 using CoreService.Features.Queries.CustomerQueries;
 using CoreService.Models.Requests;
+using CoreService.Models.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Responses;
@@ -23,6 +24,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet("Profile")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetCustomerProfileResponse))]
     public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetCustomerProfileQuery(), cancellationToken);
@@ -31,6 +33,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPut("UpdateProfile")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateCustomerProfileResponse))]
     public async Task<IActionResult> UpdateProfile(UpdateCustomerProfileRequest request,
         CancellationToken cancellationToken)
     {

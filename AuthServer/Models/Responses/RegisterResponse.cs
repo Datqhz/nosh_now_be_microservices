@@ -6,7 +6,7 @@ namespace AuthServer.Models.Responses;
 
 public class RegisterResponse : BaseResponse
 {
-    public RegisterPostProcessorPayload Data { get; set; }
+    internal RegisterPostProcessorPayload Data { get; set; }
 }
 
 public class RegisterPostProcessorPayload

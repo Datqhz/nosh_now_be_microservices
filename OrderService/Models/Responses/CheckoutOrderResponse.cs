@@ -5,7 +5,7 @@ namespace OrderService.Models.Responses;
 
 public class CheckoutOrderResponse : BaseResponse
 {
-    public CheckoutOrderPostProcessorData PostProcessorData { get; set; }
+    internal CheckoutOrderPostProcessorData PostProcessorData { get; set; }
 }
 
 public class CheckoutOrderPostProcessorData

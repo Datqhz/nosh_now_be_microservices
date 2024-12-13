@@ -5,7 +5,7 @@ namespace OrderService.Models.Responses;
 
 public class AcceptOrderResponse : BaseResponse
 {
-    public AcceptOrderPostProcessorData PostProcessorData { get; set; }
+    internal AcceptOrderPostProcessorData PostProcessorData { get; set; }
 }
 
 public class AcceptOrderPostProcessorData
