@@ -35,7 +35,7 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> AddCategory([FromBody] AddCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AddCategoryCommand(request), cancellationToken);
-        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
     [HttpPut]

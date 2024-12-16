@@ -1,9 +1,8 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Shared.Responses;
 using Shared.Validations;
 
-namespace OrderService.Middlewares;
+namespace CoreService.Middlewares;
 
 public class ErrorHandlingMiddleware : IMiddleware
 {

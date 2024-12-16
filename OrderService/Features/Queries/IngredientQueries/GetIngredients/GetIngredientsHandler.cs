@@ -26,17 +26,27 @@ public class GetIngredientsHandler : IRequestHandler<GetIngredientsQuery, GetIng
     }
     public async Task<GetIngredientsResponse> Handle(GetIngredientsQuery request, CancellationToken cancellationToken)
     {
-        var functionName = $"{nameof(GetIngredientsHandler)}";
+        var currentUserId = _httpContextAccessor.GetCurrentUserId();
+        var functionName = $"{nameof(GetIngredientsHandler)} Restaurant {currentUserId} =>";
         var response = new GetIngredientsResponse {StatusCode = (int)ResponseStatusCode.InternalServerError};
 
         try
         {
-            var currentUserId = _httpContextAccessor.GetCurrentUserId();
-            functionName = $"{nameof(GetIngredientsHandler)} Restaurant {currentUserId} =>";
             _logger.LogInformation(functionName);
 
+            var restaurantId = currentUserId;
+            
+            var employee = await _unitOfRepository.Employee
+                .Where(x => x.Id.Equals(currentUserId))
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (employee is not null)
+            {
+                restaurantId = employee.RestaurantId;
+            }
+
             var ingredients = await _unitOfRepository.Ingredient
-                .Where(x => x.RestaurantId == currentUserId)
+                .Where(x => x.RestaurantId.Equals(restaurantId))
                 .Select(x => new GetIngredientsData
                 {
                     Id = x.Id,

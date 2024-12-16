@@ -21,6 +21,7 @@ public class GetFoodByIdData
 public class FoodIngredientData
 {
     public long RequiredIngredientId { get; set; }
+    public long IngredientId { get; set; }
     public string IngredientName { get; set; }
     public double RequiredAmount { get; set; }
     public string IngredientImage { get; set; }

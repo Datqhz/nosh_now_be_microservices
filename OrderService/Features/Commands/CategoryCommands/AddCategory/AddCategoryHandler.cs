@@ -40,10 +40,12 @@ public class AddCategoryHandler : IRequestHandler<AddCategoryCommand, CreateCate
                 Name = payload.CategoryName,
                 Image = payload.Image
             };
-            await _unitOfRepository.Category.Add(category);
+            var categoryCreated = await _unitOfRepository.Category.Add(category);
             await _unitOfRepository.CompleteAsync();
             
             response.StatusCode = (int)ResponseStatusCode.Ok;
+            Console.WriteLine($"Category created: {categoryCreated.Id.ToString()}");
+            response.Data = categoryCreated.Id.ToString();
         }
         catch (Exception ex)
         {

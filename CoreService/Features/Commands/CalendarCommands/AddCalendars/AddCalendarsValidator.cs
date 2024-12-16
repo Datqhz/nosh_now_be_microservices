@@ -44,7 +44,7 @@ public class CalendarInputValidator : AbstractValidator<CalendarInput>
             .Cascade(CascadeMode.Stop)
             .Must(x => 
                 x.StartDate.Date > DateTime.Now.Date 
-                && x.EndDate.Date < DateTime.Now.Date
+                && x.EndDate.Date > DateTime.Now.Date
             )
             .WithMessage("Start time and end time must be in future.")
             .Must(x => 

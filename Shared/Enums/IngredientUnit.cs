@@ -2,8 +2,8 @@
 
 public enum IngredientUnit
 {
-    Gram,
-    Kilogram,
-    Milliliter,
-    Liter
+    Gram = 1,
+    Kilogram = 2,
+    Milliliter = 3,
+    Liter = 4
 }

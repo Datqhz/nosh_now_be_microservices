@@ -9,17 +9,17 @@ using Shared.MassTransits.Core;
 using Shared.MassTransits.Enums;
 using Shared.Responses;
 
-namespace OrderService.Features.Commands.OrderCommands.RejectOrder.PostProcessor;
+namespace OrderService.Features.Commands.OrderCommands.CancelOrder.PostProcessor;
 
-public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, RejectOrderResponse>
+public class AfterCancelOrder : IRequestPostProcessor<CancelOrderCommand, CancelOrderResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<AfterRejectOrder> _logger;
+    private readonly ILogger<AfterCancelOrder> _logger;
     private readonly ISendEndpointCustomProvider _sendEndpoint;
-    public AfterRejectOrder
+    public AfterCancelOrder
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<AfterRejectOrder> logger,
+        ILogger<AfterCancelOrder> logger,
         ISendEndpointCustomProvider sendEndpoint
     )
     {
@@ -27,9 +27,9 @@ public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, Reject
         _logger = logger;
         _sendEndpoint = sendEndpoint;
     }
-    public async Task Process(RejectOrderCommand request, RejectOrderResponse response, CancellationToken cancellationToken)
+    public async Task Process(CancelOrderCommand request, CancelOrderResponse response, CancellationToken cancellationToken)
     {
-        var functionName = $"{nameof(AfterRejectOrder)} OrderId = {request.OrderId} =>";
+        var functionName = $"{nameof(AfterCancelOrder)} OrderId = {request.OrderId} =>";
         await using var transaction = await _unitOfRepository.OpenTransactionAsync();
 
         try
@@ -75,7 +75,7 @@ public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, Reject
                 var message = new NotifyOrder
                 {
                     OrderId = request.OrderId.ToString(),
-                    OrderStatus = OrderStatus.Rejected,
+                    OrderStatus = OrderStatus.Canceled,
                     RestaurantName = restaurantName,
                     Receivers = [order.CustomerId],
                     ReceiverType = ReceiverType.Customer

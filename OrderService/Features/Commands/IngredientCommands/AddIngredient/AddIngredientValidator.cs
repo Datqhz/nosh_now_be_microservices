@@ -39,12 +39,9 @@ public class AddIngredientValidator : AbstractValidator<AddIngredientCommand>
             .NotEmpty()
             .WithMessage("Ingredient image is required");
         
-        RuleFor(command => command.Payload.Unit)
-            .Cascade(CascadeMode.Stop)
-            .NotNull()
-            .NotEmpty()
-            .WithMessage("Unit is required")
-            .IsInEnum()
-            .WithMessage("Invalid data value");
+        // RuleFor(command => command.Payload.Unit)
+        //     .Cascade(CascadeMode.Stop)
+        //     .IsInEnum()
+        //     .WithMessage("Invalid data value");
     }
 }

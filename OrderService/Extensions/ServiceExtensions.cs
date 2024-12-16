@@ -146,6 +146,19 @@ public static class ServiceExtensions
                 e.ConfigureConsumeTopology = false;
                 e.ConfigureConsumer <CreateUserConsumer>(ctx);
             });
+            
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(ReCalculateIngredientSchedule)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer<ReCalculateIngredientScheduleConsumer>(ctx);
+            });
+            
+            cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(ReCalculateIngredient)), e =>
+            {
+                e.ConfigureConsumeTopology = false;
+                e.ConfigureConsumer<ReCalculateIngredientConsumer>(ctx);
+            });
+            
             cfg.ReceiveEndpoint(new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(UpdateSnapshotUser)), e =>
             {
                 e.ConfigureConsumeTopology = false;

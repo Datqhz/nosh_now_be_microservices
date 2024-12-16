@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CoreService.Data.Models;
 using CoreService.Models.Requests;
 using CoreService.Models.Responses;
@@ -31,7 +32,7 @@ public class AddCalendarsHandler : IRequestHandler<AddCalendarsCommand, AddCalen
         var payload = request.Payload;
         var currentId = _httpContextAccessor.GetCurrentUserId();
         var functionName = $"{nameof(AddCalendarsHandler)} RestaurantId = {currentId} =>";
-        _logger.LogInformation(functionName);
+        _logger.LogInformation(functionName + $" Payload = {JsonSerializer.Serialize(request.Payload)}");
         var response = new AddCalendarsResponse { StatusCode = (int)ResponseStatusCode.Ok };
 
         try
@@ -39,7 +40,7 @@ public class AddCalendarsHandler : IRequestHandler<AddCalendarsCommand, AddCalen
             var savedCalendars = await _unitOfRepository.Calendar
                 .Where(x => x.RestaurantId.ToString().Equals(currentId))
                 .ToListAsync(cancellationToken);
-            Parallel.ForEach(payload.Inputs, input =>
+            foreach (var input in payload.Inputs)
             {
                 var calendar = savedCalendars
                     .FirstOrDefault(x => x.StartTime.Date == input.StartDate.Date || x.EndTime.Date == input.StartDate.Date);
@@ -53,13 +54,14 @@ public class AddCalendarsHandler : IRequestHandler<AddCalendarsCommand, AddCalen
                     };
                     _unitOfRepository.Calendar.Add(newCalendar).FireAndForget();
                 }
-                
-                calendar.StartTime = input.StartDate;
-                calendar.EndTime = input.EndDate;
-                _unitOfRepository.Calendar.Update(calendar);
-            });
-
-            Task.WaitAll();
+                else
+                {
+                    calendar.StartTime = input.StartDate;
+                    calendar.EndTime = input.EndDate;
+                    _unitOfRepository.Calendar.Update(calendar);
+                }
+            }
+            
             await _unitOfRepository.CompleteAsync();
             
             var afterAdd = await _unitOfRepository.Calendar

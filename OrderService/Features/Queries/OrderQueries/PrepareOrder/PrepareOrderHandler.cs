@@ -29,7 +29,7 @@ public class PrepareOrderHandler : IRequestHandler<PrepareOrderQuery, PrepareOrd
     {
         var orderId = request.OrderId;
         var functionName = $"{nameof(PrepareOrderHandler)} OrderId = {orderId} =>";
-        var response = new PrepareOrderResponse {StatusCode = (int)ResponseStatusCode.InternalServerError};
+        var response = new PrepareOrderResponse {StatusCode = (int)ResponseStatusCode.BadRequest};
         
         try
         {
@@ -57,7 +57,10 @@ public class PrepareOrderHandler : IRequestHandler<PrepareOrderQuery, PrepareOrd
             if (order is null)
             {
                 _logger.LogWarning($"{functionName} Order could be found");
+                response.ErrorMessage = "Order not found";
+                return response;
             }
+            
             var orderDetails = await 
                 (
                     from od in _unitOfRepository.OrderDetail.GetAll()
@@ -70,20 +73,51 @@ public class PrepareOrderHandler : IRequestHandler<PrepareOrderQuery, PrepareOrd
                         FoodName = food.Name,
                         FoodPrice = food.Price,
                         FoodImage = food.Image,
-                        Amount = od.Amount
+                        Amount = od.Amount,
+                        FoodId = food.Id
                     }
                 )
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-            /*var requiredIngredient = 
-            (
-                from od in _unitOfRepository.OrderDetail.GetAll()
-                join i in _unitOfRepository.RequiredIngredient.GetAll()
-                    on od.FoodId equals i.FoodId
-                where od.OrderId == orderId
-                group i by i.IngredientId into g
-                
-            );*/
+            
+            var foodIds = orderDetails.Select(x => x.FoodId).ToList();
+            var foodAmounts = await
+                (
+                    from ri in _unitOfRepository.RequiredIngredient
+                        .Where(x => foodIds.Contains(x.FoodId))
+                    join i in _unitOfRepository.Ingredient.GetAll()
+                        on ri.IngredientId equals i.Id
+                    let quantity = i.Quantity / ri.Quantity
+                    select new
+                    {
+                        ri.FoodId,
+                        quantity
+                    }
+                )
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+            
+            var foodsAvailable = foodAmounts.GroupBy(x => x.FoodId)
+                .Select(x => new
+                {
+                    FoodId = x.Key,
+                    Quantity = x.Min(x => x.quantity)
+                })
+                .ToList();
+            foreach (var orderDetail in orderDetails)
+            {
+                var foodAvailable = foodsAvailable
+                    .FirstOrDefault(x => 
+                        x.FoodId == orderDetail.FoodId 
+                        && Math.Floor(x.Quantity) >= orderDetail.Amount
+                    );
+                if (foodAvailable is null)
+                {
+                    _logger.LogWarning($"{functionName} Order can't serve");
+                    response.ErrorMessage = "Ingredient isn't sufficient to serve this order";
+                    return response;
+                }
+            }
             var totalPay = orderDetails.Sum(x => x.Amount * x.FoodPrice);
             order.OrderDetails = orderDetails;
             order.Substantial = totalPay;
@@ -93,6 +127,8 @@ public class PrepareOrderHandler : IRequestHandler<PrepareOrderQuery, PrepareOrd
         catch (Exception ex)
         {
             _logger.LogError(ex, $"{functionName} Has error: {ex.Message}");
+            response.ErrorMessage = "Internal Server Error";
+            response.StatusCode = (int)ResponseStatusCode.InternalServerError;
             // response.ErrorMessage = CoreServiceTranslation.EXH_ERR_01.ToString();
             // response.MessageCode = CoreServiceTranslation.EXH_ERR_01.ToString();
         }

@@ -49,8 +49,6 @@ public static class ServiceExtensions
                     OnMessageReceived = context =>
                     {
                         var accessToken = context.Request.Query["access_token"];
-                        Console.WriteLine(context.HttpContext.Request.Path);
-                        Console.WriteLine($"accessToken: {accessToken}");
                         // If the request is for SignalR and contains an access token, extract it
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrEmpty(accessToken) &&
@@ -172,6 +170,7 @@ public static class ServiceExtensions
         services.AddSignalR(options =>
             {
                 options.EnableDetailedErrors = true;
+                options.KeepAliveInterval = TimeSpan.FromSeconds(30);
             })
             .AddMessagePackProtocol();
         return services;

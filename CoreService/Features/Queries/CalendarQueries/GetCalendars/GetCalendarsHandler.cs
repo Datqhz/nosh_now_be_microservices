@@ -35,11 +35,23 @@ public class GetCalendarsHandler : IRequestHandler<GetCalendarsQuery, GetCalenda
 
         try
         {
+            var restaurantId = currentUserId;
+            
+            var employee = await _unitOfRepository.Employee
+                .Where(x => x.Id == Guid.Parse(currentUserId))
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (employee is not null)
+            {
+                restaurantId = employee.RestaurantId.ToString();
+            }
+            
             var calendars = await _unitOfRepository.Calendar
                 .Where(x => 
                     x.EndTime <= payload.ToDate
                     && x.StartTime >= payload.FromDate
-                    && x.RestaurantId.ToString().Equals(currentUserId)
+                    && x.RestaurantId.ToString().Equals(restaurantId)
+                    
                 )
                 .AsNoTracking()
                 .Select(x => new GetCalendarsData

@@ -2,24 +2,23 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Models.Responses;
 using OrderService.Repositories;
-using Shared.Enums;
 using Shared.Extensions;
 using Shared.MassTransits.Contracts;
 using Shared.MassTransits.Core;
 using Shared.MassTransits.Enums;
 using Shared.Responses;
 
-namespace OrderService.Features.Commands.OrderCommands.RejectOrder.PostProcessor;
+namespace OrderService.Features.Queries.OrderQueries.PrepareOrder.PostProccessors;
 
-public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, RejectOrderResponse>
+public class AfterPrepareOrder : IRequestPostProcessor<PrepareOrderQuery, PrepareOrderResponse>
 {
     private readonly IUnitOfRepository _unitOfRepository;
-    private readonly ILogger<AfterRejectOrder> _logger;
+    private readonly ILogger<AfterPrepareOrder> _logger;
     private readonly ISendEndpointCustomProvider _sendEndpoint;
-    public AfterRejectOrder
+    public AfterPrepareOrder
     (
         IUnitOfRepository unitOfRepository,
-        ILogger<AfterRejectOrder> logger,
+        ILogger<AfterPrepareOrder> logger,
         ISendEndpointCustomProvider sendEndpoint
     )
     {
@@ -27,19 +26,23 @@ public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, Reject
         _logger = logger;
         _sendEndpoint = sendEndpoint;
     }
-    public async Task Process(RejectOrderCommand request, RejectOrderResponse response, CancellationToken cancellationToken)
+    public async Task Process(PrepareOrderQuery request, PrepareOrderResponse response, CancellationToken cancellationToken)
     {
-        var functionName = $"{nameof(AfterRejectOrder)} OrderId = {request.OrderId} =>";
-        await using var transaction = await _unitOfRepository.OpenTransactionAsync();
+        var functionName = $"{nameof(AfterPrepareOrder)} =>";
 
         try
         {
             _logger.LogInformation(functionName);
             if (response.StatusCode == (int)ResponseStatusCode.Ok)
             {
+                await using var transaction = await _unitOfRepository.OpenTransactionAsync();
+                
+                /* 1. Get all order details of this order */
                 var orderDetails = await _unitOfRepository.OrderDetail
                     .Where(x => x.OrderId == request.OrderId)
                     .ToListAsync(cancellationToken);
+                
+                /* Calculate after user get order to complete order */
                 foreach (var orderDetail in orderDetails)
                 {
                     var ingredientData = await
@@ -55,38 +58,29 @@ public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, Reject
                             }
                         )
                         .ToListAsync(cancellationToken);
+                    
                     foreach (var ingredient in ingredientData)
                     {
-                        ingredient.Ingredient.Quantity += ingredient.Quantity * orderDetail.Amount;
+                        ingredient.Ingredient.Quantity -= ingredient.Quantity * orderDetail.Amount;
                         _unitOfRepository.Ingredient.Update(ingredient.Ingredient);
                     }
                 }
 
                 await _unitOfRepository.CompleteAsync();
                 await _unitOfRepository.CommitAsync();
-                
-                /* Todo: Send message to queue for notify customer*/
-                var order = await  _unitOfRepository.Order.GetById(request.OrderId);
-                var restaurantName = await _unitOfRepository.Restaurant
-                    .Where(x => x.Id.Equals(order.RestaurantId))
-                    .AsNoTracking()
-                    .Select(x => x.Name)
-                    .FirstOrDefaultAsync(cancellationToken);
-                var message = new NotifyOrder
+
+                var scheduleMessage = new ReCalculateIngredientSchedule
                 {
-                    OrderId = request.OrderId.ToString(),
-                    OrderStatus = OrderStatus.Rejected,
-                    RestaurantName = restaurantName,
-                    Receivers = [order.CustomerId],
-                    ReceiverType = ReceiverType.Customer
+                    OrderId = request.OrderId,
+                    Duration = TimeSpan.FromMinutes(5)
                 };
-                await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
+
+                await _sendEndpoint.SendMessage<ReCalculateIngredientSchedule>(scheduleMessage, ExchangeType.Direct, cancellationToken);
             }
         }
         catch (Exception ex)
         {
-            ex.LogError(functionName, _logger);
-            await _unitOfRepository.RollbackAsync();
+            ex.LogError($"{functionName} Has error: {ex.Message}", _logger);
         }
     }
 }

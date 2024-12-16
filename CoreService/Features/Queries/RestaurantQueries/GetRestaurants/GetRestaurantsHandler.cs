@@ -31,27 +31,32 @@ public class GetRestaurantsHandler : IRequestHandler<GetRestaurantsQuery, GetRes
         {
             _logger.LogInformation(functionName);
             /* Todo: Join with calendar table to select restaurant status */
-            var pagination = await _unitOfRepository.Restaurant
-                .Where(res => 
-                    (
-                        string.IsNullOrEmpty(payload.Keyword)
-                        || EF.Functions.ILike(res.DisplayName, payload.Keyword.ToILikePattern())
-                    )
+            var keyword = payload.Keyword.Trim();
+            var pagination = await
+            (
+                from res in _unitOfRepository.Restaurant.GetAll()
+                join cal in _unitOfRepository.Calendar.GetAll()
+                    on res.Id equals cal.RestaurantId
+                where
+                    cal.StartTime <= DateTime.Now
+                    && cal.EndTime >= DateTime.Now
                     && res.IsActive
-                )
-                .AsNoTracking()
-                .Select(res => new GetRestaurantsData
-                    {
-                        RestaurantId = res.Id.ToString(),
-                        Avatar = res.Avatar,
-                        Distance = LocationHelper.GetDistance(res.Coordinate, payload.Coordinate),
-                        RestaurantName = res.DisplayName,
-                        Coordinate = res.Coordinate
-                    }
-                )
-                .ToListAsPageAsync(payload.PageNumber, payload.MaxPerPage, cancellationToken);
+                    && (string.IsNullOrEmpty(keyword)
+                        || EF.Functions.ILike(res.DisplayName, keyword.ToILikePattern()))
+                select new GetRestaurantsData
+                {
+                    RestaurantId = res.Id.ToString(),
+                    Avatar = res.Avatar,
+                    Distance = LocationHelper.GetDistance(res.Coordinate, payload.Coordinate),
+                    RestaurantName = res.DisplayName,
+                    Coordinate = res.Coordinate
+                }
+            )
+            .AsNoTracking()
+            .ToListAsPageAsync(payload.PageNumber, payload.MaxPerPage, cancellationToken);
                 
-            response.Data = pagination.Data;
+            var sortedData = pagination.Data.OrderBy(x => x.Distance).ToList();
+            response.Data = sortedData;
             response.Paging = pagination.Paging;
             response.StatusCode = (int)ResponseStatusCode.Ok;
         }

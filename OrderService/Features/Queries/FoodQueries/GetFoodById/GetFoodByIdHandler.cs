@@ -1,8 +1,12 @@
-﻿using OrderService.Models.Responses;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using OrderService.Models.Responses;
 using OrderService.Repositories;
 using MassTransit.Initializers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Shared.Extensions;
 using Shared.Helpers;
 using Shared.Responses;
@@ -64,6 +68,7 @@ public class GetFoodByIdHandler : IRequestHandler<GetFoodByIdQuery, GetFoodByIdR
                     select new FoodIngredientData
                     {
                         RequiredIngredientId = ri.Id,
+                        IngredientId = ri.IngredientId,
                         IngredientName = i.Name,
                         IngredientImage = i.Image,
                         RequiredAmount = ri.Quantity,

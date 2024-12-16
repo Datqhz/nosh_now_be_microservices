@@ -36,7 +36,7 @@ public class IngredientController : ControllerBase
     public async Task<IActionResult> AddIngredient([FromBody] AddIngredientRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AddIngredientCommand(request), cancellationToken);
-        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode, response.Data);
     }
     
     [HttpPut]

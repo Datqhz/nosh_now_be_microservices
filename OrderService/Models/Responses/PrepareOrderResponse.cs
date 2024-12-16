@@ -23,4 +23,5 @@ public class PrepareOrderOrderDetailData
     public string FoodImage { get; set; }
     public decimal FoodPrice { get; set; }
     public int Amount { get; set; }
+    internal int FoodId { get; set; }
 }
