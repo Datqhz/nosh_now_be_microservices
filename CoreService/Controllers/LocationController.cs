@@ -1,5 +1,6 @@
 ﻿using CoreService.Features.Commands.EmployeeCommands.UpdateEmployeeProfile;
 using CoreService.Features.Commands.LocationCommands.CreateLocation;
+using CoreService.Features.Commands.LocationCommands.DeleteLocation;
 using CoreService.Features.Commands.LocationCommands.UpdateLocation;
 using CoreService.Features.Queries.RestaurantQueries.GetRestaurants;
 using CoreService.Features.Queries.SavedLocationQueries.GetSavedLocationByCustomer;
@@ -46,6 +47,14 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateLocationRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateLocationCommand(request), cancellationToken);
+        return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
+    }
+    
+    [HttpDelete("Delete/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateLocationResponse))]
+    public async Task<IActionResult> UpdateProfile([FromRoute] int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new DeleteLocationCommand(id), cancellationToken);
         return ResponseHelper.ToResponse(response.StatusCode, response.ErrorMessage, response.MessageCode);
     }
     

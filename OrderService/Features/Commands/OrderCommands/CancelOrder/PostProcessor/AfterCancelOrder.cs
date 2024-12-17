@@ -64,27 +64,11 @@ public class AfterCancelOrder : IRequestPostProcessor<CancelOrderCommand, Cancel
 
                 await _unitOfRepository.CompleteAsync();
                 await _unitOfRepository.CommitAsync();
-                
-                /* Todo: Send message to queue for notify customer*/
-                var order = await  _unitOfRepository.Order.GetById(request.OrderId);
-                var restaurantName = await _unitOfRepository.Restaurant
-                    .Where(x => x.Id.Equals(order.RestaurantId))
-                    .AsNoTracking()
-                    .Select(x => x.Name)
-                    .FirstOrDefaultAsync(cancellationToken);
-                var message = new NotifyOrder
-                {
-                    OrderId = request.OrderId.ToString(),
-                    OrderStatus = OrderStatus.Canceled,
-                    RestaurantName = restaurantName,
-                    Receivers = [order.CustomerId],
-                    ReceiverType = ReceiverType.Customer
-                };
-                await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
             }
         }
         catch (Exception ex)
         {
+            await _unitOfRepository.RollbackAsync();
             ex.LogError(functionName, _logger);
             await _unitOfRepository.RollbackAsync();
         }

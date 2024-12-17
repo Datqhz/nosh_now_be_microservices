@@ -72,7 +72,7 @@ public class AfterPrepareOrder : IRequestPostProcessor<PrepareOrderQuery, Prepar
                 var scheduleMessage = new ReCalculateIngredientSchedule
                 {
                     OrderId = request.OrderId,
-                    Duration = TimeSpan.FromMinutes(5)
+                    Duration = TimeSpan.FromMinutes(2)
                 };
 
                 await _sendEndpoint.SendMessage<ReCalculateIngredientSchedule>(scheduleMessage, ExchangeType.Direct, cancellationToken);

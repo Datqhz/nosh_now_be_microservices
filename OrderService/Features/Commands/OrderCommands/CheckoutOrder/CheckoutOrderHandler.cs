@@ -40,8 +40,8 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
             var currentUserId = _httpContextAccessor.GetCurrentUserId();
             var order = await _unitOfRepository.Order
                 .Where(x => x.Id == payload.OrderId)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(cancellationToken);
+            
             if (order is null)
             {
                 response.StatusCode = (int)ResponseStatusCode.NotFound;
