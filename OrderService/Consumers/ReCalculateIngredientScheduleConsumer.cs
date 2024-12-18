@@ -21,10 +21,10 @@ public class ReCalculateIngredientScheduleConsumer : IConsumer<ReCalculateIngred
         try
         {
             _logger.LogInformation(functionName);
-            var queueName = new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(NotifyOrder));
+            var queueName = new KebabCaseEndpointNameFormatter(false).SanitizeName(nameof(ReCalculateIngredient));
             Uri notificationService = new Uri($"queue:{queueName}");
    
-            await context.ScheduleSend<NotifyOrder>(notificationService,
+            await context.ScheduleSend<ReCalculateIngredient>(notificationService,
                 context.Message.Duration, new ReCalculateIngredient
                 {
                     OrderId = message.OrderId

@@ -51,6 +51,20 @@ public class ServiceExtensions
             });
         });
     }
+    
+    public void AddCustomCors(IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                );
+            });
+        }
+        
     public void ConfigureAuthentication(IServiceCollection services)
     {
         services

@@ -31,7 +31,6 @@ public class GetRestaurantsByCategoryHandler : IRequestHandler<GetRestaurantsByC
         try
         {
             _logger.LogInformation(functionName);
-            /* Todo: Join with calendar table to select restaurant status */
             var pagination = await 
                 (
                     from res in _unitOfRepository.Restaurant.GetAll()
@@ -40,13 +39,15 @@ public class GetRestaurantsByCategoryHandler : IRequestHandler<GetRestaurantsByC
                     join category in _unitOfRepository.Category.GetAll()
                         on food.CategoryId equals category.Id
                     where category.Id.ToString().Equals(payload.CategoryId)
+                    group res by res.Id into g
                     select new GetRestaurantsByCategoryData
                     {
-                        RestaurantId = res.Id,
-                        RestaurantName = res.Name,
-                        Coordinate = res.Coordinate,
-                        Avatar = res.Avatar
+                        RestaurantId = g.Key,
+                        RestaurantName = g.Select(x => x.Name).FirstOrDefault(),
+                        Coordinate = g.Select(x => x.Coordinate).FirstOrDefault(),
+                        Avatar = g.Select(x => x.Avatar).FirstOrDefault(),
                     }
+                    
                 )
                 .AsNoTracking()
                 .ToListAsPageAsync(payload.PageNumber, payload.MaxPerPage, cancellationToken);

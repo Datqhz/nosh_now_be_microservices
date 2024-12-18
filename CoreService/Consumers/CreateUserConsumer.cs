@@ -48,6 +48,16 @@ public class CreateUserConsumer : IConsumer<CreateUser>
                         Avatar = message.Avatar,
                     };
                     await _unitOfRepository.Customer.Add((Customer)user);
+                    
+                    var location = new Location
+                    {
+                        CustomerId = Guid.Parse(message.Id),
+                        Coordinate = message.Coordinate,
+                        Phone = message.PhoneNumber,
+                        Name = "Default",
+                    };
+                    await _unitOfRepository.Location.Add(location);
+                    
                     break;
                 }
                 case SystemRole.Restaurant:
