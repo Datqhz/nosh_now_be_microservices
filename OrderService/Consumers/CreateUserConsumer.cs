@@ -50,6 +50,7 @@ public class CreateUserConsumer : IConsumer<CreateSnapshotUser>
                         Phone = message.Phone,
                         Avatar = message.Avatar,
                         Coordinate = message.Coordinate,
+                        IsActive = true
                     };
                     await _unitOfRepository.Restaurant.Add(user);
                     break;

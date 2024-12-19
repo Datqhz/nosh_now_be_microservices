@@ -18,22 +18,25 @@ public interface IShipperSimulation
 public class ShipperSimulation : IShipperSimulation
 {
     private readonly IServiceProvider _serviceProvider;
-
+    private readonly ILogger<ShipperSimulation> _logger;
     public ShipperSimulation
     (
-        IServiceProvider serviceProvider
+        IServiceProvider serviceProvider,
+        ILogger<ShipperSimulation> logger
     )
     {
         _serviceProvider = serviceProvider;
+        _logger = logger;
     }
     
     public async Task<SimulationResult> HandleOrderAsync(Order order, double distance, double velocity)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var unitOfRepository = scope.ServiceProvider.GetRequiredService<IUnitOfRepository>();
+        var functionName = $"{nameof(ShipperSimulation)} =>";
+        _logger.LogInformation($"{functionName} Begin simulation");
         try
         {
-            Console.WriteLine("Begin Shipper Simulation");
+            using var scope = _serviceProvider.CreateScope();
+            var unitOfRepository = scope.ServiceProvider.GetRequiredService<IUnitOfRepository>();
             /* 1. Try get shipper is free time*/
             var freeShipper = await unitOfRepository.Shipper
                 .GetAll()
@@ -41,7 +44,7 @@ public class ShipperSimulation : IShipperSimulation
 
             if (freeShipper is null)
             {
-                Console.WriteLine("No free shipper");
+                _logger.LogInformation($"{functionName} No free shipper found");
                 return SimulationResult.NoShipperFree;
             }
 
@@ -50,7 +53,7 @@ public class ShipperSimulation : IShipperSimulation
             var isPickOrder = random.NextDouble() < 0.85;
             if (!isPickOrder)
             {
-                Console.WriteLine($"Shipper {freeShipper.Id} skip order {order.Id}");
+                _logger.LogInformation($"{functionName} Shipper {freeShipper.Id} skip order {order.Id}");
                 return SimulationResult.ShipperSkip;
             }
 
@@ -70,15 +73,13 @@ public class ShipperSimulation : IShipperSimulation
             var startCount = 0;
             for (startCount = 0; startCount <= countUpdate; startCount++)
             {
-                Console.WriteLine(
-                    $"Shipper {freeShipper.Id} will arrive in {timeToArrive - (startCount * 5)} minutes to deliver order {order.Id}");
+                _logger.LogInformation($"{functionName} Shipper {freeShipper.Id} will arrive in {timeToArrive - (startCount * 5)} minutes to deliver order {order.Id}");
                 Task.Delay(1000).Wait();
             }
 
             // Update status to arrived
             var currentOrder = await unitOfRepository.Order.GetById(order.Id);
             currentOrder.Status = OrderStatus.Arrived;
-            unitOfRepository.Order.Update(currentOrder);
             await unitOfRepository.CompleteAsync();
 
             // Notify to customer
@@ -86,7 +87,7 @@ public class ShipperSimulation : IShipperSimulation
             var sendEndpoint = scope.ServiceProvider.GetRequiredService<ISendEndpointCustomProvider>();
             var sfIds = await unitOfRepository.Employee.Where(x => x.RestaurantId == order.RestaurantId)
                 .Select(x => x.Id)
-                .ToListAsync(new CancellationToken());
+                .ToListAsync();
             var customerMessage = new NotifyOrder
             {
                 OrderId = order.Id.ToString(),
@@ -110,7 +111,8 @@ public class ShipperSimulation : IShipperSimulation
             var isReceiveOrder = random.NextDouble() < 0.95;
             if (!isReceiveOrder)
             {
-                Console.WriteLine($"Customer {order.CustomerId} not receive order {order.Id}");
+                
+               _logger.LogInformation($"{functionName} Customer {order.CustomerId} not receive order {order.Id}");
                 currentOrder.Status = OrderStatus.Failed;
                 unitOfRepository.Order.Update(currentOrder);
                 await unitOfRepository.CompleteAsync();
@@ -152,7 +154,7 @@ public class ShipperSimulation : IShipperSimulation
                 Receivers = sfIds
             };
             await sendEndpoint.SendMessage<NotifyOrder>(successMessageSF, ExchangeType.Direct, new CancellationToken());
-            Console.WriteLine($"Order {order.Id} done");
+            _logger.LogInformation($"{functionName} Order {order.Id} done");
             freeShipper.IsFree = true;
             unitOfRepository.Shipper.Update(freeShipper);
             var total = await unitOfRepository.OrderDetail
@@ -176,7 +178,7 @@ public class ShipperSimulation : IShipperSimulation
         }
         catch (Exception ex)
         {
-            Console.Write(ex.Message);
+            _logger.LogError(ex, $"{functionName} Has error: {ex.Message}");
             return SimulationResult.Complete;
         }
     }

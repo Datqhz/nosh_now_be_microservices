@@ -2,6 +2,12 @@
 
 name: noshnowbe
 services:
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
   rabbitmq:
     image: masstransit/rabbitmq
     ports:
@@ -81,3 +87,4 @@ services:
 volumes:
   db_test:
   rabbitmqdata:
+  redis-data:

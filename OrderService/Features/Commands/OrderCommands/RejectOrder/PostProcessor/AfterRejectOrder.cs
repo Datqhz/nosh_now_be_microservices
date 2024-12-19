@@ -87,7 +87,6 @@ public class AfterRejectOrder : IRequestPostProcessor<RejectOrderCommand, Reject
         {
             await _unitOfRepository.RollbackAsync();
             ex.LogError(functionName, _logger);
-            await _unitOfRepository.RollbackAsync();
         }
     }
 }

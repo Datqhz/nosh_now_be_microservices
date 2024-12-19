@@ -76,7 +76,6 @@ public class AfterUpdatePrepareStatus : IRequestPostProcessor<UpdatePrepareStatu
                     await _sendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
                     /* Todo: Send message to notify for shipper */
                     
-                    
                     /* Todo: Send message to notify for customer */
                     var customerId = await _unitOfRepository.Customer
                         .Where(x =>
@@ -93,13 +92,21 @@ public class AfterUpdatePrepareStatus : IRequestPostProcessor<UpdatePrepareStatu
                         Receivers = customerId
                     };
                     await _sendEndpoint.SendMessage<NotifyOrder>(customerMessage, ExchangeType.Direct, cancellationToken);
-                    Task.Run(async () =>
+                    await Task.Run(async () =>
                     {
-                        var random = new Random();
-                        var distance = random.Next(10, 40);
-                        var velocity = random.Next(10, 40);
-                        await _simulation.HandleOrderAsync(order, distance, velocity);
-                    });
+                        _logger.LogInformation($"{functionName} => Begin simulation");
+                        try
+                        {
+                            var random = new Random();
+                            var distance = random.Next(10, 40);
+                            var velocity = random.Next(10, 40);
+                            await _simulation.HandleOrderAsync(order, distance, velocity);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogInformation($"{functionName} Simulation error: {ex.Message}");
+                        }
+                    }, cancellationToken);
                 }
             }
         }

@@ -78,7 +78,7 @@ public class AfterAcceptOrder : IRequestPostProcessor<AcceptOrderCommand, Accept
                     Receivers = customerId,
                     ReceiverType = ReceiverType.Customer
                 };
-                await _SendEndpoint.SendMessage<NotifyOrder>(message, ExchangeType.Direct, cancellationToken);
+                await _SendEndpoint.SendMessage<NotifyOrder>(customerMessage, ExchangeType.Direct, cancellationToken);
             }
         }
         catch (Exception ex)
